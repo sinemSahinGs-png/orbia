@@ -1,0 +1,2106 @@
+/* ORBIA homepage sections — premium visual refinement
+   Does NOT modify hero or .cine-manifesto styles. */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Foundation ── */
+.ak-section {
+  --ak-gold: #b7a16a;
+  --ak-ivory: #f2f0ea;
+  --ak-muted: rgba(236, 233, 226, 0.86);
+  --ak-line: rgba(215, 217, 223, 0.16);
+  --ak-surface: rgba(12, 15, 22, 0.78);
+  --ak-midnight: #131d35;
+  --mobile-gutter: 18px;
+  --mobile-content-width: calc(100vw - 36px);
+  --ak-pad: var(--mobile-gutter);
+
+  position: relative;
+  padding: clamp(2.75rem, 7vw, 5rem) 0;
+  color: var(--ak-ivory);
+  isolation: isolate;
+}
+
+.ak-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% -8%, rgba(183, 161, 106, 0.055), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 100%, rgba(19, 29, 53, 0.45), transparent 55%);
+  opacity: 0.9;
+}
+
+.ak-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.ak-container {
+  width: var(--mobile-content-width);
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+@media (min-width: 768px) {
+  .ak-section {
+    --mobile-gutter: 24px;
+    --mobile-content-width: min(1180px, calc(100% - 48px));
+  }
+}
+
+.ak-eyebrow {
+  margin: 0 0 12px;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: max(0.76rem, 12px);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(183, 161, 106, 0.92);
+}
+
+.ak-heading {
+  margin: 0;
+  font-family: var(--font-display), "Bodoni Moda", Georgia, serif;
+  font-size: clamp(2.2rem, 8.6vw, 3.6rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--ak-ivory);
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: manual;
+}
+
+.ak-heading__line {
+  display: block;
+}
+
+.ak-heading__line + .ak-heading__line::before {
+  content: none;
+}
+
+.ak-body {
+  margin: 0.95rem 0 0;
+  max-width: min(36ch, 100%);
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(1rem, 4.1vw, 1.15rem);
+  line-height: 1.55;
+  color: var(--ak-muted);
+}
+
+@media (max-width: 479px) {
+  .ak-body {
+    max-width: 100%;
+  }
+
+  .ak-heading {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .ak-heading {
+    max-width: min(100%, 14ch);
+    font-size: clamp(2.8rem, 5.5vw, 4.2rem);
+  }
+}
+
+.ak-muted {
+  color: var(--ak-muted);
+}
+
+.ak-section-heading {
+  margin-bottom: clamp(1.25rem, 3.5vw, 2.25rem);
+}
+
+.ak-cta-primary {
+  border-color: rgba(183, 161, 106, 0.5) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(183, 161, 106, 0.22),
+    rgba(19, 29, 53, 0.55)
+  ) !important;
+}
+
+.ak-cta-primary:hover {
+  border-color: rgba(183, 161, 106, 0.85) !important;
+  box-shadow: inset 0 0 20px rgba(183, 161, 106, 0.14) !important;
+}
+
+/* ── Section bridges ── */
+.ak-bridge {
+  position: relative;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  margin: -4px 0;
+  z-index: 2;
+}
+
+.ak-bridge__track {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(183, 161, 106, 0.35),
+    transparent
+  );
+}
+
+.ak-bridge__point {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ak-gold, #b7a16a);
+  box-shadow: 0 0 12px rgba(183, 161, 106, 0.55);
+  animation: ak-bridge-drift 4.5s ease-in-out infinite;
+}
+
+.ak-bridge--orbit .ak-bridge__track {
+  width: min(120px, 28vw);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(215, 217, 223, 0.28),
+    transparent
+  );
+}
+
+.ak-bridge--pulse .ak-bridge__point {
+  animation: ak-bridge-pulse 2.8s ease-out infinite;
+}
+
+.ak-bridge--fade {
+  height: 32px;
+}
+
+.ak-bridge--fade .ak-bridge__track {
+  width: min(180px, 40vw);
+  height: 1px;
+  opacity: 0.5;
+}
+
+.ak-bridge--line .ak-bridge__point {
+  display: none;
+}
+
+@keyframes ak-bridge-drift {
+  0%,
+  100% {
+    transform: translateY(-10px);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(10px);
+    opacity: 1;
+  }
+}
+
+@keyframes ak-bridge-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-bridge__point {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+/* ── Keychain ── */
+.ak-keychain {
+  position: relative;
+  width: min(260px, 72vw);
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+}
+
+.ak-keychain--lg {
+  width: min(300px, 78vw);
+}
+
+.ak-keychain--xl {
+  width: min(360px, 90vw);
+}
+
+.ak-keychain__ring {
+  width: clamp(40px, 12vw, 52px);
+  height: clamp(40px, 12vw, 52px);
+  border: 2px solid #d7d9df;
+  border-radius: 50%;
+  margin-bottom: -12px;
+  box-shadow: inset 0 0 0 5px #050609, 0 0 0 1px rgba(215, 217, 223, 0.2);
+}
+
+.ak-keychain__body {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 0.72;
+  border-radius: 28% / 22%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.ak-keychain__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.ak-keychain__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.16) 48%,
+    transparent 58%
+  );
+  transform: translateX(-40%);
+  animation: ak-metal-sweep 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.ak-keychain__glyph {
+  position: relative;
+  z-index: 1;
+}
+
+.ak-keychain__engrave {
+  position: absolute;
+  bottom: 14%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(0.72rem, 2.2vw, 0.8rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(215, 217, 223, 0.78);
+}
+
+.ak-keychain__edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.4;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  mask: linear-gradient(#000, transparent 42%);
+}
+
+.ak-keychain__shadow {
+  width: 72%;
+  height: 22px;
+  margin-top: 20px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.6), transparent 70%);
+}
+
+@keyframes ak-metal-sweep {
+  0%,
+  100% {
+    transform: translateX(-55%);
+  }
+  50% {
+    transform: translateX(55%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-keychain__shine {
+    animation: none;
+    opacity: 0.35;
+    transform: none;
+  }
+}
+
+/* ── NFC Journey ── */
+.ak-nfc {
+  padding-top: clamp(2.75rem, 7vw, 4.5rem);
+}
+
+.ak-nfc__glow {
+  position: absolute;
+  inset: 10% 0 auto;
+  height: 40%;
+  background: radial-gradient(ellipse at 30% 40%, rgba(183, 161, 106, 0.08), transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ak-nfc__grid {
+  display: grid;
+  gap: 1.75rem;
+}
+
+@media (min-width: 1024px) {
+  .ak-nfc__grid {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  .ak-nfc__sticky {
+    position: sticky;
+    top: 14vh;
+  }
+}
+
+.ak-nfc__hero-visual {
+  margin-top: 0.85rem;
+}
+
+.ak-nfc__phone {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: stretch;
+  max-width: 100%;
+  width: min(100%, 360px);
+  margin-inline: auto;
+}
+
+.ak-nfc__phone-frame {
+  width: clamp(168px, 48vw, 214px);
+  aspect-ratio: 0.52;
+  border-radius: 26px;
+  border: 1px solid rgba(215, 217, 223, 0.22);
+  background: linear-gradient(165deg, #121722, #050609);
+  padding: 10px;
+  box-shadow:
+    0 28px 56px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(183, 161, 106, 0.08);
+}
+
+.ak-nfc__phone-screen {
+  position: relative;
+  height: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(183, 161, 106, 0.2);
+  background: radial-gradient(circle at 50% 42%, rgba(183, 161, 106, 0.12), rgba(5, 6, 9, 0.9));
+  display: grid;
+  place-items: end center;
+  padding: 0.85rem;
+  overflow: hidden;
+}
+
+.ak-nfc__phone-pulse {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
+  border-radius: 50%;
+  border: 1px solid rgba(183, 161, 106, 0.45);
+  background: radial-gradient(circle, rgba(183, 161, 106, 0.28), transparent 70%);
+}
+
+.ak-nfc__phone-label {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: max(0.78rem, 12px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(242, 240, 234, 0.88);
+  text-align: center;
+}
+
+.ak-nfc__phone-path {
+  width: 12px;
+  align-self: stretch;
+}
+
+.ak-nfc__phone-path svg {
+  width: 100%;
+  height: 100%;
+  min-height: 140px;
+}
+
+.ak-nfc__steps-wrap {
+  position: relative;
+  padding-left: 1.35rem;
+}
+
+.ak-nfc__rail {
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background: rgba(215, 217, 223, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ak-nfc__rail-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(183, 161, 106, 0.25), var(--ak-gold));
+  transform-origin: top center;
+}
+
+.ak-nfc__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(1.75rem, 5vw, 2.75rem);
+}
+
+.ak-nfc__step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  min-height: clamp(88px, 18vw, 120px);
+  padding: 0.35rem 0 0.35rem 0.65rem;
+  transition: opacity 0.35s ease;
+}
+
+.ak-nfc__step.is-active {
+  filter: drop-shadow(-6px 0 18px rgba(183, 161, 106, 0.18));
+}
+
+.ak-nfc__num {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.75rem, 7vw, 2.45rem);
+  line-height: 1;
+  color: var(--ak-gold);
+  letter-spacing: 0.04em;
+  padding-top: 0.15rem;
+}
+
+.ak-nfc__copy h3 {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.35rem, 5.5vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.ak-nfc__copy p {
+  margin: 0.55rem 0 0;
+  color: var(--ak-muted);
+  line-height: 1.6;
+  font-size: clamp(1.02rem, 3.8vw, 1.1rem);
+  max-width: 100%;
+}
+
+.ak-nfc__tap {
+  position: relative;
+  margin-top: 0.85rem;
+  display: inline-flex;
+}
+
+.ak-nfc-wave {
+  width: 88px;
+  height: 44px;
+}
+
+.ak-nfc__tap-burst {
+  position: absolute;
+  inset: -8px;
+  border: 1px solid rgba(183, 161, 106, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ── Zodiac collection ── */
+.ak-zodiac__counter {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: -0.5rem 0 1.25rem;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(0.78rem, 2.8vw, 0.9rem);
+  letter-spacing: 0.14em;
+  color: var(--ak-muted);
+}
+
+.ak-zodiac__counter > span:first-child {
+  color: var(--ak-gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+}
+
+.ak-zodiac__counter-name {
+  margin-left: 0.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(242, 240, 234, 0.78);
+}
+
+.ak-zodiac__rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min(92vw, 380px), 92vw);
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0.85rem max(18px, calc((100vw - min(92vw, 380px)) / 2 - 6px)) 1.35rem;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: max(18px, calc((100vw - min(92vw, 380px)) / 2 - 6px));
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.ak-zodiac__rail::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .ak-zodiac__rail {
+    grid-auto-columns: minmax(300px, 320px);
+    gap: 1.15rem;
+    padding-inline: max(24px, calc((100vw - 1180px) / 2 + 24px));
+    scroll-padding-inline: max(24px, calc((100vw - 1180px) / 2 + 24px));
+  }
+}
+
+.ak-zodiac-card {
+  position: relative;
+  scroll-snap-align: center;
+  min-height: clamp(440px, 112vw, 520px);
+  padding: 1.9rem 1.55rem 1.7rem;
+  border: 1px solid rgba(215, 217, 223, 0.18);
+  border-radius: 22px;
+  background:
+    linear-gradient(165deg, rgba(24, 28, 40, 0.98), rgba(5, 6, 9, 0.96)),
+    radial-gradient(circle at 70% 18%, rgba(183, 161, 106, 0.14), transparent 50%);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition:
+    border-color 0.35s ease,
+    opacity 0.35s ease,
+    transform 0.45s ease,
+    box-shadow 0.45s ease;
+  opacity: 0.78;
+  scale: 0.96;
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.ak-zodiac-card.is-active {
+  opacity: 1;
+  scale: 1;
+  border-color: color-mix(in srgb, var(--sign-accent) 55%, transparent);
+  box-shadow:
+    0 36px 70px rgba(0, 0, 0, 0.48),
+    0 0 0 1px color-mix(in srgb, var(--sign-accent) 28%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.ak-zodiac-card__ring {
+  position: absolute;
+  top: 1.15rem;
+  right: 1.15rem;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 4px #050609;
+  opacity: 0.75;
+}
+
+.ak-zodiac-card__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.ak-zodiac-card__constellation {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.ak-zodiac-card__constellation svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ak-zodiac-card__sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.09) 50%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+.ak-zodiac-card.is-active .ak-zodiac-card__sweep,
+.ak-zodiac-card:hover .ak-zodiac-card__sweep {
+  animation: ak-metal-sweep 1.35s ease forwards;
+}
+
+.ak-zodiac-card__glyph {
+  position: relative;
+  z-index: 1;
+  margin: 0.35rem 0 1.35rem;
+}
+
+.ak-zodiac-card__name {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.85rem, 7vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.ak-zodiac-card__meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.55rem 0 0;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(0.78rem, 2.6vw, 0.86rem);
+  letter-spacing: 0.03em;
+  color: var(--ak-muted);
+}
+
+.ak-zodiac-card__identity {
+  position: relative;
+  z-index: 1;
+  margin: 1.2rem 0 1.5rem;
+  min-height: 2.8em;
+  color: rgba(242, 240, 234, 0.86);
+  line-height: 1.55;
+  font-size: clamp(1rem, 3.5vw, 1.08rem);
+  max-width: 22ch;
+}
+
+.ak-zodiac-card__cta {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.25rem 0;
+  color: var(--sign-accent, var(--ak-gold));
+  text-decoration: none;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(0.72rem, 2.4vw, 0.8rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid color-mix(in srgb, var(--sign-accent) 45%, transparent);
+}
+
+.ak-zodiac-card__cta:focus-visible {
+  outline: 2px solid var(--ak-gold);
+  outline-offset: 4px;
+}
+
+.ak-zodiac__dots {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0.25rem 16px 0;
+}
+
+.ak-zodiac__dots button {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(215, 217, 223, 0.28);
+  cursor: pointer;
+}
+
+.ak-zodiac__dots button.is-active {
+  background: var(--ak-gold);
+  box-shadow: 0 0 0 3px rgba(183, 161, 106, 0.18);
+}
+
+.ak-zodiac__dots button:focus-visible {
+  outline: 2px solid var(--ak-gold);
+  outline-offset: 3px;
+}
+
+/* ── Daily sky ── */
+.ak-sky__stage {
+  position: relative;
+  margin-top: 0.35rem;
+  display: grid;
+  place-items: center;
+  min-height: auto;
+  padding: 0.5rem 0 0.25rem;
+}
+
+.ak-sky__orbit {
+  position: absolute;
+  width: min(560px, 96vw);
+  aspect-ratio: 1;
+  border: 1px solid rgba(215, 217, 223, 0.1);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ak-sky__orbit::before {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  border: 1px dashed rgba(183, 161, 106, 0.2);
+  border-radius: 50%;
+  animation: ak-orbit-spin 28s linear infinite;
+}
+
+.ak-sky__bloom {
+  position: absolute;
+  width: min(420px, 88vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(183, 161, 106, 0.18), transparent 68%);
+  pointer-events: none;
+}
+
+.ak-sky__panel {
+  position: relative;
+  width: 100%;
+  padding: clamp(1.45rem, 4.5vw, 1.85rem);
+  border: 1px solid rgba(215, 217, 223, 0.16);
+  background: linear-gradient(
+    165deg,
+    rgba(19, 29, 53, 0.62),
+    rgba(5, 6, 9, 0.92)
+  );
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.48);
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .ak-sky__panel {
+    width: min(100%, 540px);
+  }
+}
+
+.ak-sky__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.ak-sky__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.ak-sky__sign {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.7rem, 6.5vw, 2.1rem);
+  letter-spacing: 0.08em;
+}
+
+.ak-sky__date {
+  margin: 0;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(0.72rem, 2.5vw, 0.82rem);
+  color: var(--ak-muted);
+}
+
+.ak-sky__headline {
+  margin: 1.1rem 0 1.5rem;
+  font-size: clamp(1.05rem, 3.8vw, 1.2rem);
+  line-height: 1.5;
+  color: rgba(242, 240, 234, 0.92);
+  max-width: 28ch;
+}
+
+.ak-sky__energy {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(210px, 54vw, 260px);
+  margin-bottom: 1.5rem;
+}
+
+.ak-sky__aura {
+  position: absolute;
+  width: clamp(150px, 42vw, 190px);
+  height: clamp(150px, 42vw, 190px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(183, 161, 106, calc(0.14 + var(--energy, 0.7) * 0.4)) 0%,
+    transparent 68%
+  );
+  box-shadow: 0 0 0 1px rgba(183, 161, 106, 0.28);
+  animation: ak-aura-breathe 4.5s ease-in-out infinite;
+}
+
+.ak-sky__glyph {
+  position: absolute;
+  opacity: 0.55;
+  z-index: 0;
+}
+
+.ak-sky__energy-copy {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.ak-sky__energy-copy span {
+  display: block;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(0.72rem, 2.4vw, 0.78rem);
+  letter-spacing: 0.2em;
+  color: var(--ak-muted);
+}
+
+.ak-sky__energy-copy strong {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.4rem, 10vw, 3.1rem);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ak-gold);
+}
+
+.ak-sky__energy-copy em {
+  font-style: normal;
+  font-size: 0.45em;
+  color: rgba(242, 240, 234, 0.55);
+}
+
+.ak-sky__metrics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.05rem;
+}
+
+.ak-sky__metric-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: clamp(0.92rem, 3.2vw, 1rem);
+  margin-bottom: 0.4rem;
+}
+
+.ak-sky__metric-head strong {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 500;
+  color: var(--ak-gold);
+  font-size: 1.15em;
+}
+
+.ak-sky__bar {
+  height: 3px;
+  background: rgba(215, 217, 223, 0.12);
+  overflow: hidden;
+}
+
+.ak-sky__bar > span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(183, 161, 106, 0.35), var(--ak-gold));
+  transform-origin: left center;
+}
+
+.ak-sky__advice {
+  margin-top: 1.5rem;
+  padding: 1.15rem 0 0;
+  border-top: 1px solid var(--ak-line);
+}
+
+.ak-sky__advice p:last-child {
+  margin: 0.4rem 0 0;
+  font-size: clamp(1.05rem, 3.8vw, 1.2rem);
+  line-height: 1.5;
+  color: rgba(242, 240, 234, 0.92);
+  max-width: 26ch;
+}
+
+.ak-sky__moon-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.95rem;
+  align-items: center;
+  margin-top: 1.35rem;
+  font-size: clamp(0.88rem, 3vw, 0.96rem);
+}
+
+.ak-sky__moon-row p {
+  margin: 0;
+}
+
+.ak-sky__moon-svg {
+  width: 56px;
+  height: 56px;
+}
+
+@keyframes ak-orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ak-aura-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-sky__orbit::before,
+  .ak-sky__aura {
+    animation: none;
+  }
+}
+
+/* ── Astronomy ── */
+.ak-astro__fallback {
+  margin: 0 0 1.25rem;
+  color: var(--ak-gold);
+  letter-spacing: 0.04em;
+  font-size: clamp(0.92rem, 3.2vw, 1rem);
+}
+
+.ak-astro__layout .ak-section-heading {
+  margin-bottom: 1.25rem;
+}
+
+.ak-astro__stage {
+  position: relative;
+  display: grid;
+  gap: 1.15rem;
+  justify-items: center;
+  margin-top: 0.25rem;
+  overflow: visible;
+  padding-block: 0.25rem 0.5rem;
+}
+
+@media (min-width: 900px) {
+  .ak-astro__stage {
+    grid-template-columns: minmax(280px, 1.05fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 2.5rem;
+  }
+}
+
+.ak-astro__orbit-ring {
+  position: absolute;
+  width: min(420px, 96vw);
+  aspect-ratio: 1;
+  border: 1px solid rgba(215, 217, 223, 0.1);
+  border-radius: 50%;
+  left: 50%;
+  top: 2%;
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+.ak-astro__orbit-ring::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 1px dashed rgba(183, 161, 106, 0.18);
+  border-radius: 50%;
+}
+
+@media (min-width: 900px) {
+  .ak-astro__orbit-ring {
+    left: -8%;
+    top: 50%;
+    translate: 0 -50%;
+    width: min(640px, 52vw);
+  }
+}
+
+.ak-astro__moon {
+  position: relative;
+  width: min(340px, 88vw);
+  aspect-ratio: 1;
+  margin-block: -4% 0;
+}
+
+@media (min-width: 900px) {
+  .ak-astro__moon {
+    width: min(440px, 40vw);
+    margin-left: -6%;
+  }
+}
+
+.ak-astro__moon-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 28px 48px rgba(0, 0, 0, 0.5));
+}
+
+.ak-astro__point {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(242, 240, 234, 0.75);
+  box-shadow: 0 0 12px rgba(183, 161, 106, 0.5);
+}
+
+.ak-astro__point--a {
+  top: 10%;
+  left: 16%;
+}
+.ak-astro__point--b {
+  top: 26%;
+  right: 4%;
+}
+.ak-astro__point--c {
+  bottom: 16%;
+  left: 6%;
+}
+
+.ak-astro__labels {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.15rem 1rem;
+}
+
+.ak-astro__labels li {
+  padding-left: 0.75rem;
+  border-left: 1px solid rgba(183, 161, 106, 0.35);
+}
+
+.ak-astro__labels span {
+  display: block;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(0.72rem, 2.4vw, 0.78rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ak-muted);
+  margin-bottom: 0.3rem;
+}
+
+.ak-astro__labels strong {
+  font-weight: 500;
+  font-size: clamp(1rem, 3.5vw, 1.12rem);
+  color: var(--ak-ivory);
+  line-height: 1.3;
+}
+
+/* ── Pairing ── */
+.ak-pair__flow {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .ak-pair__flow {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+.ak-pair__flow li {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--ak-line);
+}
+
+.ak-pair__flow span {
+  font-size: clamp(0.72rem, 2.4vw, 0.78rem);
+  letter-spacing: 0.16em;
+  color: var(--ak-gold);
+}
+
+.ak-pair__flow p {
+  margin: 0;
+  font-size: clamp(0.92rem, 3.2vw, 1rem);
+  line-height: 1.5;
+  color: rgba(242, 240, 234, 0.86);
+}
+
+.ak-pair__stage {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  min-height: clamp(400px, 102vw, 480px);
+  place-items: center;
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .ak-pair__stage {
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    min-height: 380px;
+    overflow: visible;
+  }
+}
+
+.ak-pair__constellation {
+  width: min(280px, 78vw);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .ak-pair__constellation {
+    width: min(280px, 30vw);
+  }
+}
+
+.ak-pair__constellation svg {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.ak-pair__sign-name {
+  margin: 0.65rem 0 0;
+  font-family: var(--font-display), Georgia, serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: clamp(1rem, 3.8vw, 1.2rem);
+}
+
+.ak-pair__core {
+  position: relative;
+  width: clamp(88px, 22vw, 110px);
+  height: clamp(88px, 22vw, 110px);
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+
+.ak-pair__core-blend {
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  filter: blur(1px);
+  box-shadow: 0 0 40px rgba(183, 161, 106, 0.25);
+}
+
+.ak-pair__ripple {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(183, 161, 106, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ak-pair__result {
+  border: 1px solid var(--ak-line);
+  background: linear-gradient(160deg, rgba(19, 29, 53, 0.5), rgba(5, 6, 9, 0.82));
+  padding: clamp(1.35rem, 4vw, 1.75rem);
+}
+
+.ak-pair__pair-title {
+  margin: 0 0 1.35rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.7rem, 7vw, 2.35rem);
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+}
+
+.ak-pair__metrics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.15rem 1rem;
+}
+
+.ak-pair__metrics span {
+  display: block;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(0.72rem, 2.4vw, 0.78rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ak-muted);
+  margin-bottom: 0.3rem;
+}
+
+.ak-pair__metrics strong {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.55rem, 6vw, 1.9rem);
+  font-weight: 500;
+  color: var(--ak-gold);
+}
+
+.ak-pair__message {
+  margin: 1.4rem 0 1.5rem;
+  max-width: 38rem;
+  line-height: 1.65;
+  font-size: clamp(0.98rem, 3.4vw, 1.08rem);
+  color: rgba(242, 240, 234, 0.86);
+}
+
+/* ── Physical product ── */
+.ak-product__layout {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 960px) {
+  .ak-product__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: center;
+    gap: 3rem;
+  }
+}
+
+.ak-product__visual {
+  order: -1;
+}
+
+@media (min-width: 960px) {
+  .ak-product__visual {
+    order: 0;
+  }
+}
+
+.ak-product__features {
+  list-style: none;
+  margin: 1.35rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.ak-product__features li {
+  padding-left: 1rem;
+  border-left: 1px solid rgba(183, 161, 106, 0.5);
+  color: rgba(242, 240, 234, 0.88);
+  font-size: clamp(0.95rem, 3.3vw, 1.05rem);
+}
+
+.ak-product__specs {
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.ak-product__specs > div {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 8.5rem) 1fr;
+  gap: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--ak-line);
+  font-size: clamp(0.92rem, 3.2vw, 1rem);
+}
+
+.ak-product__specs dt {
+  color: var(--ak-muted);
+}
+
+.ak-product__specs dd {
+  margin: 0;
+  color: rgba(242, 240, 234, 0.9);
+}
+
+.ak-product__stage {
+  position: relative;
+  min-height: clamp(440px, 112vw, 560px);
+  display: grid;
+  place-items: center;
+}
+
+.ak-product__ann {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(0.72rem, 2.2vw, 0.78rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ak-muted);
+  max-width: 110px;
+  z-index: 2;
+}
+
+.ak-product__ann--left {
+  left: 0;
+  flex-direction: row;
+}
+
+.ak-product__ann--right {
+  right: 0;
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.ak-product__ann:nth-child(1) {
+  top: 16%;
+}
+.ak-product__ann:nth-child(2) {
+  top: 26%;
+}
+.ak-product__ann:nth-child(3) {
+  bottom: 28%;
+}
+.ak-product__ann:nth-child(4) {
+  bottom: 16%;
+}
+
+.ak-product__ann-line {
+  width: clamp(28px, 8vw, 42px);
+  height: 1px;
+  background: rgba(183, 161, 106, 0.6);
+  flex-shrink: 0;
+}
+
+.ak-product__reflect {
+  position: absolute;
+  inset: 16% 24%;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.08) 48%,
+    transparent 62%
+  );
+  pointer-events: none;
+  animation: ak-metal-sweep 6s ease-in-out infinite;
+}
+
+@media (max-width: 479px) {
+  .ak-product__ann {
+    max-width: 72px;
+    font-size: 0.65rem;
+  }
+}
+
+/* ── Configurator ── */
+.ak-config__layout {
+  display: grid;
+  gap: 1.75rem;
+}
+
+@media (min-width: 960px) {
+  .ak-config__layout {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 2.75rem;
+    align-items: start;
+  }
+}
+
+.ak-config__progress {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 1.25rem 0;
+  color: var(--ak-muted);
+  font-size: clamp(0.78rem, 2.6vw, 0.88rem);
+  letter-spacing: 0.12em;
+}
+
+.ak-config__orbit {
+  width: 52px;
+  height: 52px;
+}
+
+.ak-config__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .ak-config__steps {
+    display: grid;
+    gap: 0.35rem;
+  }
+}
+
+.ak-config__steps button {
+  width: 100%;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.55rem 0.4rem;
+  border: 0;
+  border-left: 1px solid transparent;
+  background: transparent;
+  color: var(--ak-muted);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ak-config__steps button.is-active {
+  color: var(--ak-ivory);
+  border-left-color: var(--ak-gold);
+}
+
+.ak-config__steps button:focus-visible {
+  outline: 2px solid var(--ak-gold);
+  outline-offset: 2px;
+}
+
+.ak-config__steps span {
+  color: var(--ak-gold);
+  font-size: clamp(0.72rem, 2.4vw, 0.78rem);
+  letter-spacing: 0.12em;
+}
+
+.ak-config__panel {
+  border: 1px solid var(--ak-line);
+  background: linear-gradient(165deg, rgba(19, 29, 53, 0.48), rgba(5, 6, 9, 0.88));
+  padding: clamp(1rem, 3.5vw, 1.35rem);
+}
+
+.ak-config__preview {
+  position: relative;
+  min-height: clamp(360px, 92vw, 420px);
+  display: grid;
+  place-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.ak-config__preview .ak-keychain {
+  width: min(300px, 78vw);
+}
+
+.ak-config__preview-light {
+  position: absolute;
+  width: min(220px, 60vw);
+  height: min(220px, 60vw);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(183, 161, 106, 0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.ak-config__glyph-morph {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.ak-config__controls fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.ak-config__controls legend,
+.ak-config__controls label {
+  display: block;
+  margin-bottom: 0.85rem;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(0.72rem, 2.4vw, 0.8rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ak-muted);
+}
+
+.ak-config__sign-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+@media (min-width: 480px) {
+  .ak-config__sign-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.ak-config__sign-grid button,
+.ak-config__swatches button {
+  min-height: 48px;
+  border: 1px solid var(--ak-line);
+  background: rgba(5, 6, 9, 0.45);
+  color: rgba(242, 240, 234, 0.88);
+  font: inherit;
+  font-size: clamp(0.82rem, 2.8vw, 0.9rem);
+  cursor: pointer;
+  padding: 0.45rem 0.55rem;
+}
+
+.ak-config__sign-grid button.is-active {
+  border-color: var(--sign-accent, var(--ak-gold));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sign-accent) 40%, transparent);
+}
+
+.ak-config__swatches {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.ak-config__swatches button {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-align: left;
+  min-height: 56px;
+}
+
+.ak-config__swatches button span {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  flex-shrink: 0;
+}
+
+.ak-config__swatches button.is-active {
+  border-color: rgba(183, 161, 106, 0.7);
+}
+
+.ak-config__controls input[type="text"] {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--ak-line);
+  background: rgba(5, 6, 9, 0.55);
+  color: var(--ak-ivory);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.ak-config__controls input:focus-visible {
+  outline: 2px solid var(--ak-gold);
+  outline-offset: 2px;
+}
+
+.ak-config__count {
+  margin: 0.5rem 0 0;
+  font-size: clamp(0.78rem, 2.6vw, 0.86rem);
+  color: var(--ak-muted);
+}
+
+.ak-config__summary p,
+.ak-config__order p {
+  margin: 0 0 0.9rem;
+  line-height: 1.6;
+  font-size: clamp(0.95rem, 3.3vw, 1.05rem);
+  color: rgba(242, 240, 234, 0.88);
+}
+
+.ak-config__nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1.35rem;
+  position: sticky;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 3;
+}
+
+.ak-config__nav button {
+  min-height: 52px;
+  min-width: 118px;
+  flex: 1;
+  padding: 0 1.1rem;
+  border: 1px solid var(--ak-line);
+  background: rgba(5, 6, 9, 0.82);
+  color: var(--ak-ivory);
+  font: inherit;
+  font-size: clamp(0.72rem, 2.4vw, 0.8rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.ak-config__nav button.is-primary {
+  border-color: rgba(183, 161, 106, 0.6);
+  background: rgba(183, 161, 106, 0.16);
+}
+
+.ak-config__nav button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ak-config__nav button:focus-visible {
+  outline: 2px solid var(--ak-gold);
+  outline-offset: 2px;
+}
+
+/* ── Notice ── */
+.ak-notice {
+  padding-block: clamp(2.5rem, 6vw, 4rem);
+}
+
+.ak-notice__panel {
+  position: relative;
+  padding: clamp(1.75rem, 5vw, 2.75rem);
+  max-width: 780px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.ak-notice__trace {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.ak-notice__title {
+  position: relative;
+  margin: 0 0 1.15rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.55rem, 7vw, 2.45rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  overflow: hidden;
+}
+
+.ak-notice__title-line {
+  display: block;
+}
+
+.ak-notice__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.16) 48%,
+    transparent 62%
+  );
+  animation: ak-metal-sweep 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.ak-notice__text {
+  position: relative;
+  margin: 0 auto;
+  max-width: 38rem;
+  line-height: 1.75;
+  font-size: clamp(0.95rem, 3.5vw, 1.08rem);
+  color: rgba(242, 240, 234, 0.86);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-notice__shine,
+  .ak-product__reflect {
+    animation: none;
+  }
+}
+
+/* ── FAQ ── */
+.ak-faq {
+  padding-block: clamp(2.75rem, 7vw, 4.5rem);
+}
+
+.ak-faq__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+  max-width: 820px;
+}
+
+.ak-faq__item {
+  border-bottom: 1px solid var(--ak-line);
+}
+
+.ak-faq__trigger {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-height: 64px;
+  padding: 1.15rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--ak-ivory);
+  text-align: left;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.05rem, 4vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.ak-faq__trigger:focus-visible {
+  outline: 2px solid var(--ak-gold);
+  outline-offset: 4px;
+}
+
+.ak-faq__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--ak-gold);
+  font-size: 1.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.ak-faq__line {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--ak-gold);
+  transition: width 0.35s ease;
+}
+
+.ak-faq__line.is-active {
+  width: 100%;
+}
+
+.ak-faq__panel {
+  overflow: hidden;
+}
+
+.ak-faq__panel p {
+  margin: 0 0 1.25rem;
+  max-width: 42rem;
+  color: var(--ak-muted);
+  line-height: 1.55;
+  font-family: var(--font-body), Manrope, sans-serif;
+  font-size: clamp(1rem, 4.1vw, 1.12rem);
+}
+
+/* ── Final CTA ── */
+.ak-final {
+  min-height: auto;
+  display: grid;
+  place-items: center;
+  padding-block: clamp(3.25rem, 10vw, 5.5rem);
+  overflow: hidden;
+}
+
+.ak-final__glow {
+  position: absolute;
+  inset: 10% 0 20%;
+  background: radial-gradient(ellipse at 50% 45%, rgba(183, 161, 106, 0.12), transparent 58%);
+  pointer-events: none;
+}
+
+.ak-final__ring {
+  position: absolute;
+  width: min(420px, 78vw);
+  aspect-ratio: 1;
+  border: 1px solid rgba(183, 161, 106, 0.22);
+  border-radius: 50%;
+  box-shadow: inset 0 0 60px rgba(183, 161, 106, 0.06);
+}
+
+.ak-final__constellation {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.ak-final__svg {
+  width: min(920px, 140vw);
+  height: auto;
+  aspect-ratio: 1.35;
+}
+
+.ak-final__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  width: min(100%, calc(100vw - 32px));
+}
+
+.ak-final__content .ak-heading {
+  max-width: min(100%, 14ch);
+  margin-inline: auto;
+}
+
+.ak-final__content .ak-body {
+  margin-inline: auto;
+  max-width: min(100%, 36ch);
+}
+
+.ak-final__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  justify-content: center;
+  margin-top: 2.25rem;
+}
+
+.ak-final__pulse-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.ak-final__nfc-pulse {
+  position: absolute;
+  inset: -12px;
+  border: 1px solid rgba(183, 161, 106, 0.4);
+  border-radius: 2px;
+  animation: ak-nfc-pulse 2.8s ease-out 1;
+  pointer-events: none;
+}
+
+.ak-final__primary {
+  position: relative;
+  overflow: hidden;
+  min-width: 168px;
+}
+
+.ak-final__primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.12) 48%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  animation: ak-metal-sweep 4.5s ease-in-out 1.2s 1;
+  pointer-events: none;
+}
+
+@keyframes ak-nfc-pulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ak-final__nfc-pulse,
+  .ak-final__primary::after {
+    animation: none;
+  }
+}
+
+/* Soft footer transition */
+.memoora-home-premium .home-footer {
+  border-top: 1px solid rgba(215, 217, 223, 0.08);
+  background: linear-gradient(180deg, rgba(5, 6, 9, 0), #050609 28%);
+  padding-top: 2.5rem;
+}
+
+  /* ── Mobile density & scale pass (≤767) ── */
+@media (max-width: 767px) {
+  .ak-section {
+    padding: clamp(2.35rem, 6.5vw, 3.5rem) 0;
+  }
+
+  .ak-section-heading {
+    margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .ak-bridge,
+  .ak-bridge--fade {
+    height: 20px;
+  }
+
+  .ak-nfc__grid {
+    gap: 1.25rem;
+  }
+
+  .ak-nfc__step {
+    min-height: auto;
+    padding: 0.55rem 0 0.55rem 0.65rem;
+  }
+
+  .ak-zodiac-card {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .ak-zodiac-card:not(.is-active) {
+    opacity: 0.88;
+    scale: 0.98;
+  }
+
+  .ak-zodiac-card__name {
+    font-size: clamp(2rem, 9vw, 2.55rem);
+  }
+
+  .ak-zodiac-card__identity {
+    font-size: clamp(0.98rem, 3.6vw, 1.08rem);
+  }
+
+  .ak-sky__panel {
+    width: 100%;
+    padding: 1.35rem 1.15rem 1.45rem;
+  }
+
+  .ak-sky__stage {
+    padding-top: 0;
+  }
+
+  .ak-sky__orbit {
+    margin-top: 0.35rem;
+    min-height: auto;
+  }
+
+  .ak-sky__headline {
+    font-size: clamp(1.55rem, 7vw, 2rem);
+  }
+
+  .ak-pair__flow {
+    margin: 1.15rem 0 1.35rem;
+    gap: 0.35rem;
+  }
+
+  .ak-pair__flow li {
+    padding: 0.55rem 0;
+  }
+
+  .ak-pair__stage {
+    min-height: 220px;
+    margin-top: 0.35rem;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.35rem;
+    overflow: visible;
+  }
+
+  .ak-pair__constellation {
+    width: min(132px, 34vw);
+  }
+
+  .ak-pair__constellation svg {
+    aspect-ratio: 1;
+    max-height: 132px;
+  }
+
+  .ak-pair__core {
+    width: min(96px, 26vw);
+    height: min(96px, 26vw);
+  }
+
+  .ak-pair__result {
+    opacity: 1 !important;
+  }
+
+  .ak-product__visual {
+    order: -1;
+  }
+
+  .ak-product__layout {
+    gap: 1.5rem;
+  }
+
+  .ak-config__layout {
+    gap: 1.35rem;
+  }
+
+  .ak-config__preview {
+    border: 1px solid rgba(183, 161, 106, 0.22);
+    border-radius: 18px;
+    background:
+      radial-gradient(circle at 50% 35%, rgba(183, 161, 106, 0.14), transparent 55%),
+      rgba(12, 15, 22, 0.65);
+    padding: 1.25rem 0.75rem;
+  }
+
+  .ak-astro__labels {
+    gap: 0.85rem 0.75rem;
+  }
+
+  .ak-astro__stage {
+    gap: 0.85rem;
+  }
+
+  .ak-nfc__phone-label,
+  .ak-sky__energy-copy span,
+  .ak-sky__metric-head,
+  .ak-astro__labels span,
+  .ak-pair__flow span,
+  .ak-pair__metrics span,
+  .ak-config__steps span,
+  .ak-config__controls legend,
+  .ak-config__controls label,
+  .ak-product__specs dt,
+  .ak-zodiac__counter {
+    font-size: max(0.76rem, 12px);
+    letter-spacing: 0.06em;
+  }
+
+  .ak-sky__metrics,
+  .ak-pair__flow p,
+  .ak-nfc__copy p,
+  .ak-notice__text {
+    font-size: clamp(0.9rem, 3.7vw, 1.05rem);
+    line-height: 1.45;
+  }
+}
+

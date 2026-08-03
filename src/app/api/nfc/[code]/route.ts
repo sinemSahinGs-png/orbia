@@ -1,0 +1,1 @@
+import {NextResponse} from "next/server";import {resolveTag} from "@/lib/nfc/resolve-tag";export async function GET(_:Request,{params}:{params:Promise<{code:string}>}){const {code}=await params;const result=resolveTag(code);return NextResponse.json(result,{status:result.ok?200:404})}
