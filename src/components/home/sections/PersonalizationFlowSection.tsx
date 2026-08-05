@@ -4,9 +4,10 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { SectionHeading } from "@/components/home/visuals/SectionHeading";
-import { KeychainPlaceholder } from "@/components/home/visuals/KeychainPlaceholder";
+import { ProductPhoto } from "@/components/home/visuals/ProductPhoto";
 import { ZodiacGlyph } from "@/components/home/visuals/ZodiacGlyph";
 import { personalizationContent } from "@/content/home";
+import { productMedia } from "@/content/product";
 import { ZODIAC_COLLECTION } from "@/content/zodiac";
 import { EASE_OUT } from "@/lib/animation";
 
@@ -101,8 +102,10 @@ export function PersonalizationFlowSection() {
                 exit={reduced ? undefined : { opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.45, ease: EASE_OUT }}
               >
-                <KeychainPlaceholder
+                <ProductPhoto
                   sign={sign}
+                  src={productMedia.keychainMain}
+                  alt={`${sign.nameTr} ORBIA anahtarlık önizlemesi`}
                   surface={surface.tone}
                   metal={metal.tone}
                   engraving={message}

@@ -40,10 +40,10 @@ export function ConstellationSvg({
             y2={p2.y}
             stroke={color}
             strokeWidth={0.6}
-            initial={run ? { opacity: 0 } : { opacity: 0.7 }}
-            whileInView={{ opacity: 0.7 }}
+            initial={run ? { pathLength: 0, opacity: 0.7 } : { pathLength: 1, opacity: 0.7 }}
+            whileInView={{ pathLength: 1, opacity: 0.7 }}
             viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 0.8, delay: run ? 0.15 + i * 0.06 : 0 }}
+            transition={{ duration: 0.85, delay: run ? 0.12 + i * 0.07 : 0, ease: [0.22, 1, 0.36, 1] }}
           />
         );
       })}

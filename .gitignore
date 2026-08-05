@@ -46,3 +46,10 @@ next-env.d.ts
 /tmp-screenshots/
 /test-results/
 /playwright-report/
+
+.vercel
+
+# local QA screenshots / scratch
+tmp-*.png
+tmp-*.mjs
+

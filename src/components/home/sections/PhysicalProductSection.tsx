@@ -8,9 +8,9 @@ import {
   useTransform,
 } from "framer-motion";
 import { SectionHeading } from "@/components/home/visuals/SectionHeading";
-import { KeychainPlaceholder } from "@/components/home/visuals/KeychainPlaceholder";
+import { ProductPhoto } from "@/components/home/visuals/ProductPhoto";
 import { physicalProductContent } from "@/content/home";
-import { productAnnotationLabels, productSpecPlaceholders } from "@/content/product";
+import { productAnnotationLabels, productMedia, productSpecPlaceholders } from "@/content/product";
 import { getZodiacCollectionItem } from "@/content/zodiac";
 import { EASE_OUT } from "@/lib/animation";
 
@@ -91,7 +91,13 @@ export function PhysicalProductSection() {
                 <span className="ak-product__ann-label">{ann.label}</span>
               </motion.div>
             ))}
-            <KeychainPlaceholder sign={aslan} size="xl" />
+            <ProductPhoto
+              sign={aslan}
+              src={productMedia.keychainMain}
+              alt="ORBIA anahtarlık"
+              size="xl"
+              priority
+            />
             <div className="ak-product__reflect" aria-hidden />
           </motion.div>
         </div>

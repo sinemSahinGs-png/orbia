@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { resolveTag } from "@/lib/nfc/resolve-tag";
-import { createPairSession, createPairToken, PAIR_TTL_MS } from "@/lib/nfc/pair-session";
+import { PAIR_COOKIE_KEY, PAIR_TTL_MS, createPairSession } from "@/lib/nfc/pair-session";
+import { createPairToken } from "@/lib/nfc/pair-session-server";
 
 export async function POST(request: Request) {
-  const body = z.object({ code: z.string() }).safeParse(await request.json());
+  const body = z.object({ code: z.string().min(1) }).safeParse(await request.json());
   if (!body.success) {
     return NextResponse.json({ ok: false, error: "Geçersiz kod." }, { status: 400 });
   }
@@ -13,10 +14,22 @@ export async function POST(request: Request) {
   if (!tag.ok) return NextResponse.json(tag, { status: 404 });
 
   const session = createPairSession(tag.tag.code, tag.tag.sign.slug);
-  return NextResponse.json({
+  const token = createPairToken(session);
+
+  const res = NextResponse.json({
     ok: true,
     session,
-    token: createPairToken(session),
+    token,
     ttlMs: PAIR_TTL_MS,
   });
+
+  res.cookies.set(PAIR_COOKIE_KEY, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: Math.floor(PAIR_TTL_MS / 1000),
+  });
+
+  return res;
 }

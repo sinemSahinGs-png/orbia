@@ -11,7 +11,7 @@ const faqs = [
   },
   {
     q: "NFC nasıl çalışır?",
-    a: "Anahtarlığı telefonunun NFC alanına dokundur; tarayıcı /k/[code] adresinde günlük burç ve Ay verilerini açar.",
+    a: "Anahtarlığı telefonunun NFC alanına dokundur; tarayıcı /aslan, /yengec gibi burç adresinde günlük burç ve Ay verilerini açar.",
   },
   {
     q: "iPhone destekleniyor mu?",

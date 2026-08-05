@@ -3,14 +3,23 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { productMedia } from "@/content/product";
 
-const SCRUB_VIDEO_SRC = "/mc-hero-scrub.mp4";
-const SCRUB_POSTER_SRC = "/mc-hero-poster.jpg";
-const LERP_FACTOR = 0.12;
-const SEEK_THRESHOLD = 0.015;
-/** Mobile scrub distance — kept short so users never scroll empty black space. */
-const MOBILE_HEIGHT = "135svh";
-const DESKTOP_HEIGHT = "280vh";
+const LEGACY_SCRUB_VIDEO = "/mc-hero-scrub.mp4";
+const LEGACY_SCRUB_POSTER = "/mc-hero-poster.jpg";
+/** Soft catch-up — scroll leads, frames ease behind. */
+const LERP_FACTOR = 0.065;
+const SEEK_THRESHOLD = 0.025;
+/**
+ * Scrub travel must be long enough for short cosmic clips (~6s)
+ * to advance slowly with scroll. Distance ≈ section − viewport.
+ * ~3 viewports of travel ≈ 2s of video per screen.
+ */
+const MOBILE_HEIGHT = "400svh";
+const DESKTOP_HEIGHT = "480vh";
+
+const HERO_POSTER = productMedia.heroPoster ?? LEGACY_SCRUB_POSTER;
+const USE_COSMIC_HERO = Boolean(productMedia.heroDesktopVideo || productMedia.heroMobileVideo);
 
 interface ScrollScrubHeroProps {
   demoHref?: string;
@@ -41,6 +50,8 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
    * Height is primarily driven by CSS media queries; state only syncs scrub math.
    */
   const [sectionHeight, setSectionHeight] = useState<string | undefined>(undefined);
+  const [heroVideoSrc, setHeroVideoSrc] = useState<string | null>(null);
+  const [usedFallbackMp4, setUsedFallbackMp4] = useState(false);
 
   useEffect(() => {
     setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -53,12 +64,27 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
       setSectionHeight(mediaQuery.matches ? MOBILE_HEIGHT : DESKTOP_HEIGHT);
     };
 
+    const updateVideoSrc = () => {
+      if (!USE_COSMIC_HERO) {
+        setHeroVideoSrc(LEGACY_SCRUB_VIDEO);
+        return;
+      }
+      const preferred = mediaQuery.matches
+        ? productMedia.heroMobileVideo
+        : productMedia.heroDesktopVideo;
+      setHeroVideoSrc(preferred ?? productMedia.heroFallbackMp4 ?? LEGACY_SCRUB_VIDEO);
+      setUsedFallbackMp4(false);
+    };
+
     updateSectionHeight();
+    updateVideoSrc();
     mediaQuery.addEventListener("change", updateSectionHeight);
+    mediaQuery.addEventListener("change", updateVideoSrc);
     window.addEventListener("resize", updateSectionHeight);
 
     return () => {
       mediaQuery.removeEventListener("change", updateSectionHeight);
+      mediaQuery.removeEventListener("change", updateVideoSrc);
       window.removeEventListener("resize", updateSectionHeight);
     };
   }, []);
@@ -183,11 +209,15 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
   useEffect(() => {
     const section = sectionRef.current;
     const video = videoRef.current;
-    if (!section || !video) return;
+    if (!section || !video || !heroVideoSrc) return;
 
     let cancelled = false;
     let scrollTrigger: ScrollTrigger | null = null;
     let scrubTick: (() => void) | null = null;
+    isVideoReadyRef.current = false;
+    setVideoReady(false);
+    targetProgressRef.current = 0;
+    currentTimeRef.current = 0;
 
     const markReady = () => {
       if (cancelled || isVideoReadyRef.current) return;
@@ -205,6 +235,22 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
         /* ignore seek errors before enough data */
       }
       setVideoReady(true);
+
+      /* Warm decoder so scrub seeks land on frames instead of blanking. */
+      void video
+        .play()
+        .then(() => {
+          if (cancelled) return;
+          video.pause();
+          try {
+            video.currentTime = currentTimeRef.current;
+          } catch {
+            /* ignore */
+          }
+        })
+        .catch(() => {
+          /* autoplay warm-up optional */
+        });
     };
 
     const onLoadedMetadata = () => {
@@ -222,22 +268,23 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
     };
 
     const onError = () => {
-      /* leave ambient hero background visible */
+      if (
+        !usedFallbackMp4 &&
+        productMedia.heroFallbackMp4 &&
+        heroVideoSrc !== productMedia.heroFallbackMp4
+      ) {
+        setUsedFallbackMp4(true);
+        setHeroVideoSrc(productMedia.heroFallbackMp4);
+        return;
+      }
+      /* Poster remains visible */
     };
-
-    if (video.readyState >= 2) {
-      durationRef.current = video.duration;
-      markReady();
-    } else if (video.readyState >= 1) {
-      onLoadedMetadata();
-    }
 
     video.addEventListener("loadedmetadata", onLoadedMetadata);
     video.addEventListener("loadeddata", onLoadedData);
     video.addEventListener("canplay", onCanPlay);
     video.addEventListener("error", onError);
 
-    /* Soft timeout only hides the small pulse; never blocks copy */
     const readyTimeout = window.setTimeout(() => {
       /* keep spinner subtle; do not force videoReady without a frame */
     }, 1200);
@@ -248,6 +295,14 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
       /* ignore */
     }
 
+    if (video.readyState >= 2) {
+      durationRef.current = video.duration;
+      markReady();
+    } else if (video.readyState >= 1) {
+      onLoadedMetadata();
+    }
+
+    /* Scroll scrub: video advances with scroll, stays paused otherwise */
     if (!reduceMotion) {
       const sticky = stickyRef.current;
       if (sticky) {
@@ -273,29 +328,34 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
           if (!duration) return;
 
           const progress = targetProgressRef.current;
+          /* Linear map: equal scroll → equal time (slow, deliberate). */
           const target = progress * duration;
-          const lerpFactor = progress > 0.9 ? 0.28 : LERP_FACTOR;
+          const lerpFactor = progress > 0.94 ? 0.28 : LERP_FACTOR;
 
           currentTimeRef.current += (target - currentTimeRef.current) * lerpFactor;
 
           if (progress >= 0.995) {
-            currentTimeRef.current = target;
+            currentTimeRef.current = duration;
           }
 
           if (!video.paused) video.pause();
 
           if (Math.abs(video.currentTime - currentTimeRef.current) > SEEK_THRESHOLD) {
-            video.currentTime = currentTimeRef.current;
+            try {
+              video.currentTime = currentTimeRef.current;
+            } catch {
+              /* ignore mid-seek */
+            }
           }
 
           if (hintRef.current) {
-            hintRef.current.style.opacity = String(Math.max(0, 0.55 - progress * 2.2));
+            hintRef.current.style.opacity = String(Math.max(0, 0.55 - progress * 1.6));
           }
 
           if (copyRef.current) {
             const copyOpacity =
-              progress > 0.88 ? Math.max(0, 1 - (progress - 0.88) / 0.12) : 1;
-            const lift = progress > 0.88 ? (progress - 0.88) * -5 : 0;
+              progress > 0.9 ? Math.max(0, 1 - (progress - 0.9) / 0.1) : 1;
+            const lift = progress > 0.9 ? (progress - 0.9) * -5 : 0;
             copyRef.current.style.opacity = String(copyOpacity);
             copyRef.current.style.transform = `translate3d(0, ${lift}vh, 0)`;
           }
@@ -320,35 +380,26 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
           video.removeEventListener("loadeddata", onLoadedData);
           video.removeEventListener("canplay", onCanPlay);
           video.removeEventListener("error", onError);
+          video.pause();
         };
       }
-    } else {
-      const showStaticFrame = () => {
-        if (cancelled) return;
-        video.pause();
-        try {
-          video.currentTime = 0;
-        } catch {
-          /* ignore */
-        }
-        markReady();
-      };
+    }
 
-      if (video.readyState >= 2) {
-        showStaticFrame();
-      } else {
-        video.addEventListener("loadeddata", showStaticFrame, { once: true });
+    const showStaticFrame = () => {
+      if (cancelled) return;
+      video.pause();
+      try {
+        video.currentTime = 0;
+      } catch {
+        /* ignore */
       }
+      markReady();
+    };
 
-      return () => {
-        cancelled = true;
-        window.clearTimeout(readyTimeout);
-        video.removeEventListener("loadedmetadata", onLoadedMetadata);
-        video.removeEventListener("loadeddata", onLoadedData);
-        video.removeEventListener("loadeddata", showStaticFrame);
-        video.removeEventListener("canplay", onCanPlay);
-        video.removeEventListener("error", onError);
-      };
+    if (video.readyState >= 2) {
+      showStaticFrame();
+    } else {
+      video.addEventListener("loadeddata", showStaticFrame, { once: true });
     }
 
     return () => {
@@ -356,10 +407,12 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
       window.clearTimeout(readyTimeout);
       video.removeEventListener("loadedmetadata", onLoadedMetadata);
       video.removeEventListener("loadeddata", onLoadedData);
+      video.removeEventListener("loadeddata", showStaticFrame);
       video.removeEventListener("canplay", onCanPlay);
       video.removeEventListener("error", onError);
+      video.pause();
     };
-  }, [reduceMotion]);
+  }, [reduceMotion, heroVideoSrc, usedFallbackMp4]);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -382,22 +435,24 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
       aria-label="ORBIA cinematic hero"
     >
       <div ref={stickyRef} className="hero-scrub__sticky">
-        {/* Always-visible forest scene — prevents empty black first paint while video buffers */}
         <div
           className="hero-scrub__poster"
-          style={{ backgroundImage: `url(${SCRUB_POSTER_SRC})` }}
+          style={{ backgroundImage: `url(${HERO_POSTER})` }}
           aria-hidden
         />
-        <video
-          ref={videoRef}
-          className={`hero-scrub__video${videoReady ? " hero-scrub__video--ready" : ""}`}
-          src={SCRUB_VIDEO_SRC}
-          poster={SCRUB_POSTER_SRC}
-          muted
-          playsInline
-          preload="auto"
-          aria-hidden
-        />
+        {!reduceMotion && heroVideoSrc ? (
+          <video
+            key={heroVideoSrc}
+            ref={videoRef}
+            className={`hero-scrub__video${videoReady ? " hero-scrub__video--ready" : ""}`}
+            src={heroVideoSrc}
+            poster={HERO_POSTER}
+            muted
+            playsInline
+            preload="auto"
+            aria-hidden
+          />
+        ) : null}
 
         <div className="hero-scrub__wash" aria-hidden />
         <div className="hero-scrub__veil" aria-hidden />
@@ -413,9 +468,9 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
         </div>
 
         <div
-          className={`hero-scrub__loading${videoReady ? " hero-scrub__loading--hidden" : ""}`}
+          className={`hero-scrub__loading${videoReady || reduceMotion ? " hero-scrub__loading--hidden" : ""}`}
           aria-live="polite"
-          aria-busy={!videoReady}
+          aria-busy={!videoReady && !reduceMotion}
         >
           <span className="hero-scrub__loading-pulse" />
         </div>

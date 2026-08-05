@@ -21,7 +21,7 @@ export default function ContactPage() {
       </ul>
       <p className="cine-body" style={{ marginTop: 24 }}>
         Demo NFC deneyimi:{" "}
-        <Link href="/k/AX7K29P">/k/AX7K29P</Link> (Aslan)
+        <Link href="/aslan">/aslan</Link>
       </p>
       <Link href="/siparis" className="cine-btn" style={{ marginTop: 28, display: "inline-flex" }}>
         Sipariş talebi

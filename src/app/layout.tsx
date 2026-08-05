@@ -10,12 +10,14 @@ import "./astra.css";
 
 const bodoni = Bodoni_Moda({
   subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600"],
   variable: "--font-display",
   display: "swap",
 });
 
 const manrope = Manrope({
   subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600"],
   variable: "--font-body",
   display: "swap",
 });

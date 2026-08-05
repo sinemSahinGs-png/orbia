@@ -521,18 +521,19 @@ body:has(.memoora-home-premium) {
   color: var(--hp-ivory);
 }
 
-/* ── Hero (visual preserved; compact scrub on mobile) ── */
+/* ── Hero (scroll-scrub; longer travel = slower video progress) ── */
 .hero-scrub {
   position: relative;
-  /* CSS-first height avoids 380vh desktop default flashing on mobile SSR */
-  height: 135svh;
-  height: 135dvh;
+  /* CSS-first height avoids desktop default flashing on mobile SSR.
+     Tall travel = short clip advances slowly while scrolling. */
+  height: 400svh;
+  height: 400dvh;
   background: var(--hp-black, #050609);
 }
 
 @media (min-width: 769px) {
   .hero-scrub {
-    height: 280vh;
+    height: 480vh;
   }
 }
 
@@ -576,6 +577,15 @@ body:has(.memoora-home-premium) {
 
 .hero-scrub__video--ready {
   opacity: 1;
+}
+
+.hero-scrub--ambient .hero-scrub__video {
+  object-position: center center;
+}
+
+.hero-scrub--ambient .hero-scrub__hint--soft {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hero-scrub__wash {

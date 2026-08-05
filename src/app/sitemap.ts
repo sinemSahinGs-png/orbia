@@ -17,7 +17,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/astroloji-bildirimi",
   ];
 
-  const signRoutes = allSigns().flatMap((s) => [`/urunler/${s.slug}`, `/burc/${s.slug}`]);
+  const signRoutes = allSigns().flatMap((s) => [
+    `/${s.slug}`,
+    `/urunler/${s.slug}`,
+    `/burc/${s.slug}`,
+  ]);
 
   return [...staticRoutes, ...signRoutes].map((route) => ({
     url: `${base}${route}`,

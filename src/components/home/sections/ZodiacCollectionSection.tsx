@@ -10,11 +10,13 @@ import { SectionHeading } from "@/components/home/visuals/SectionHeading";
 import { ZodiacGlyph } from "@/components/home/visuals/ZodiacGlyph";
 import { ConstellationSvg } from "@/components/home/visuals/ConstellationSvg";
 import { zodiacCollectionContent } from "@/content/home";
+import { getZodiacProductImage } from "@/content/product";
 import { ELEMENT_LABELS, ZODIAC_COLLECTION } from "@/content/zodiac";
 import { usePointerParallax } from "@/hooks/use-pointer-parallax";
 import { EASE_OUT } from "@/lib/animation";
 
 function ZodiacCard({
+  slug,
   nameTr,
   dateRange,
   element,
@@ -28,6 +30,7 @@ function ZodiacCard({
 }: (typeof ZODIAC_COLLECTION)[number] & { index: number; active: boolean }) {
   const reduced = useReducedMotion();
   const { ref, offset, onPointerMove, onPointerLeave } = usePointerParallax(10);
+  const productSrc = getZodiacProductImage(slug);
 
   return (
     <motion.article
@@ -55,9 +58,24 @@ function ZodiacCard({
         <ConstellationSvg data={constellation} color={`${accentColor}aa`} />
       </div>
       <div className="ak-zodiac-card__sweep" aria-hidden />
-      <div className="ak-zodiac-card__glyph">
-        <ZodiacGlyph sign={{ nameTr, glyphPathHint, accentColor }} size={72} />
-      </div>
+      {productSrc ? (
+        <div className="ak-zodiac-card__product">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={productSrc}
+            alt=""
+            width={320}
+            height={320}
+            loading="lazy"
+            decoding="async"
+            className="ak-zodiac-card__product-img"
+          />
+        </div>
+      ) : (
+        <div className="ak-zodiac-card__glyph">
+          <ZodiacGlyph sign={{ nameTr, glyphPathHint, accentColor }} size={72} />
+        </div>
+      )}
       <h3 className="ak-zodiac-card__name">{nameTr}</h3>
       <p className="ak-zodiac-card__meta">
         <span>{dateRange}</span>
