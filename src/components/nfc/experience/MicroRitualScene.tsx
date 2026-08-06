@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
+import { FadeBodyReveal, MaskedHeadingReveal, SceneLabelReveal } from "@/components/nfc/experience/Reveal";
 
 type Props = {
   ritual: string;
@@ -20,7 +21,7 @@ function readDone(key: string) {
   }
 }
 
-/** Hold-to-complete 20s breath ring; day-scoped localStorage. Soft retreat on release. */
+/** Hold-to-complete breath ring; day-scoped localStorage. Soft retreat on release. */
 export function MicroRitualScene({ ritual, dateKey, signSlug }: Props) {
   const reduced = useReducedMotionSafe();
   const key = `orbia-ritual-${dateKey}-${signSlug}`;
@@ -80,7 +81,7 @@ export function MicroRitualScene({ ritual, dateKey, signSlug }: Props) {
       stopHold(true);
       try {
         localStorage.setItem(key, "1");
-        navigator.vibrate?.(18);
+        navigator.vibrate?.(10);
       } catch {
         /* ignore */
       }
@@ -99,21 +100,30 @@ export function MicroRitualScene({ ritual, dateKey, signSlug }: Props) {
     rafRef.current = requestAnimationFrame(tick);
   };
 
-  const r = 36;
+  const r = 42;
   const c = 2 * Math.PI * r;
   const dash = (progress * c).toFixed(2);
   const trailDeg = -90 + progress * 360;
   const trailRad = (trailDeg * Math.PI) / 180;
   const trailX = 50 + Math.cos(trailRad) * r;
   const trailY = 50 + Math.sin(trailRad) * r;
+  const pull = Math.min(1, progress * 1.15);
 
   return (
-    <section className="ox-scene ox-ritual" aria-labelledby="ox-ritual-heading">
-      <p className="ox-kicker">Mikro ritüel</p>
-      <h2 id="ox-ritual-heading" className="ox-heading">
-        Bir dakikalığına dur.
-      </h2>
-      <p className="ox-body ox-ritual__text">{ritual}</p>
+    <section id="ox-ritual" className="ox-scene ox-ritual ox-scene--nebula-d" aria-labelledby="ox-ritual-heading">
+      <SceneLabelReveal>Mikro ritüel</SceneLabelReveal>
+      {reduced ? (
+        <h2 id="ox-ritual-heading" className="ox-heading">
+          Bir dakikalığına dur.
+        </h2>
+      ) : (
+        <MaskedHeadingReveal className="ox-heading" as="h2" delay={0.06}>
+          <span id="ox-ritual-heading">Bir dakikalığına dur.</span>
+        </MaskedHeadingReveal>
+      )}
+      <FadeBodyReveal delay={0.14} className="ox-body ox-ritual__text">
+        {ritual}
+      </FadeBodyReveal>
 
       {done ? (
         <div className={`ox-ritual__done-wrap${bloom ? " is-bloom" : ""}`}>
@@ -124,68 +134,68 @@ export function MicroRitualScene({ ritual, dateKey, signSlug }: Props) {
       ) : reduced ? (
         <p className="ox-body">Kısaca nefes al ve niyetini tut — animasyon kapalı.</p>
       ) : (
-        <button
-          type="button"
-          className={`ox-breath${holding ? " is-holding" : ""}`}
-          onPointerDown={startHold}
-          onPointerUp={() => stopHold(false)}
-          onPointerLeave={() => stopHold(false)}
-          onPointerCancel={() => stopHold(false)}
-          onKeyDown={(e) => {
-            if (e.key === " " || e.key === "Enter") {
-              e.preventDefault();
-              startHold();
-            }
-          }}
-          onKeyUp={(e) => {
-            if (e.key === " " || e.key === "Enter") stopHold(false);
-          }}
-          aria-label="Basılı tutarak 20 saniyelik nefes halkasını tamamla"
-        >
-          <svg viewBox="0 0 100 100" aria-hidden>
-            <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(215,202,235,0.22)" strokeWidth="1.4" />
-            <circle
-              cx="50"
-              cy="50"
-              r="28"
-              fill="none"
-              stroke="rgba(201,182,232,0.2)"
-              strokeWidth="0.6"
-              strokeDasharray="1 4"
-              opacity={Math.min(1, progress * 1.4)}
+        <div className="ox-ritual__stage">
+          <div className="ox-ritual__halo" aria-hidden style={{ opacity: 0.35 + pull * 0.4 }} />
+          {[0, 1, 2, 3, 4].map((i) => (
+            <span
+              key={i}
+              className="ox-ritual__spark"
+              aria-hidden
+              style={{
+                ["--ox-spark-i" as string]: String(i),
+                opacity: 0.15 + pull * 0.55,
+                transform: `rotate(${i * 72}deg) translateY(${-58 + pull * 18}px)`,
+              }}
             />
-            {[0, 72, 144, 216, 288].map((deg) => {
-              const rad = ((deg - 90) * Math.PI) / 180;
-              const x = 50 + Math.cos(rad) * 28;
-              const y = 50 + Math.sin(rad) * 28;
-              return (
-                <circle
-                  key={deg}
-                  cx={x}
-                  cy={y}
-                  r="0.9"
-                  fill="var(--astral-lilac)"
-                  opacity={progress > deg / 360 ? 0.75 : 0.12}
-                />
-              );
-            })}
-            <motion.circle
-              cx="50"
-              cy="50"
-              r={r}
-              fill="none"
-              stroke="var(--astral-lilac)"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeDasharray={`${dash} ${c}`}
-              transform="rotate(-90 50 50)"
-            />
-            {progress > 0.02 ? (
-              <circle cx={trailX} cy={trailY} r="1.6" fill="var(--astral-lilac)" opacity="0.9" />
-            ) : null}
-          </svg>
-          <span>{holding ? "Tut…" : "Basılı tut"}</span>
-        </button>
+          ))}
+          <button
+            type="button"
+            className={`ox-breath${holding ? " is-holding" : " is-idle"}`}
+            onPointerDown={startHold}
+            onPointerUp={() => stopHold(false)}
+            onPointerLeave={() => stopHold(false)}
+            onPointerCancel={() => stopHold(false)}
+            onKeyDown={(e) => {
+              if (e.key === " " || e.key === "Enter") {
+                e.preventDefault();
+                startHold();
+              }
+            }}
+            onKeyUp={(e) => {
+              if (e.key === " " || e.key === "Enter") stopHold(false);
+            }}
+            aria-label="Basılı tutarak 20 saniyelik nefes halkasını tamamla"
+          >
+            <svg viewBox="0 0 100 100" aria-hidden>
+              <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(215,202,235,0.22)" strokeWidth="1.2" />
+              <circle
+                cx="50"
+                cy="50"
+                r="32"
+                fill="none"
+                stroke="rgba(201,182,232,0.18)"
+                strokeWidth="0.55"
+                strokeDasharray="1 4"
+                opacity={Math.min(1, progress * 1.4)}
+              />
+              <motion.circle
+                cx="50"
+                cy="50"
+                r={r}
+                fill="none"
+                stroke="var(--astral-lilac)"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeDasharray={`${dash} ${c}`}
+                transform="rotate(-90 50 50)"
+              />
+              {progress > 0.02 ? (
+                <circle cx={trailX} cy={trailY} r="1.8" fill="var(--sign-primary)" opacity="0.9" />
+              ) : null}
+            </svg>
+            <span>{holding ? "Tut…" : "Basılı tut"}</span>
+          </button>
+        </div>
       )}
     </section>
   );

@@ -21,19 +21,21 @@ type Props = {
 };
 
 function MoonPhaseIcon({ illumination }: { illumination: number }) {
-  const offset = 28 - illumination * 56;
+  const shadowX = 46 - illumination * 88;
+  const shadow = `radial-gradient(circle at ${shadowX}% 48%, transparent 38%, rgba(2,3,8,0.45) 56%, rgba(2,3,8,0.92) 72%)`;
   return (
-    <svg className="ak-sky__moon-svg" viewBox="0 0 56 56" aria-hidden focusable="false">
-      <defs>
-        <mask id="ak-sky-moon-mask">
-          <rect width="56" height="56" fill="black" />
-          <circle cx="28" cy="28" r="20" fill="white" />
-          <circle cx={28 + offset} cy="28" r="20" fill="black" />
-        </mask>
-      </defs>
-      <circle cx="28" cy="28" r="20" fill="rgba(215,217,223,0.16)" />
-      <circle cx="28" cy="28" r="20" fill="rgba(242,240,234,0.9)" mask="url(#ak-sky-moon-mask)" />
-    </svg>
+    <div className="ak-sky__moon-photo-wrap" aria-hidden>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/astronomy/moon.webp"
+        alt=""
+        width={112}
+        height={112}
+        className="ak-sky__moon-photo"
+        decoding="async"
+      />
+      <span className="ak-sky__moon-photo-shadow" style={{ background: shadow }} />
+    </div>
   );
 }
 
@@ -53,6 +55,7 @@ export function DailySkyExperienceSection({ astronomy }: Props) {
   const moonSign = astronomy
     ? getSignBySlug(astronomy.moonTropicalSign)?.nameTr ?? "—"
     : "—";
+  const energy = sample.energy / 100;
 
   const metrics = [
     { label: "Duygusal Akış", value: sample.emotional },
@@ -95,20 +98,37 @@ export function DailySkyExperienceSection({ astronomy }: Props) {
             </div>
             <p className="ak-sky__headline">{sample.headline}</p>
 
-            <div className="ak-sky__energy">
-              <div
+            <div
+              className="ak-sky__energy"
+              style={{ ["--energy" as string]: energy }}
+            >
+              <span className="ak-sky__ring ak-sky__ring--a" aria-hidden />
+              <span className="ak-sky__ring ak-sky__ring--b" aria-hidden />
+              <span className="ak-sky__ring ak-sky__ring--c" aria-hidden />
+              <motion.div
                 className="ak-sky__aura"
-                style={{ ["--energy" as string]: sample.energy / 100 }}
                 aria-hidden
               />
               {sign ? (
-                <div className="ak-sky__glyph" aria-hidden>
-                  <ZodiacGlyph
-                    sign={sign}
-                    size={64}
-                    draw={!reduced}
-                  />
-                </div>
+                <motion.div
+                  className="ak-sky__glyph"
+                  aria-hidden
+                  animate={
+                    reduced
+                      ? undefined
+                      : {
+                          rotate: [0, 8, -6, 0],
+                          scale: [1, 1.04, 0.98, 1],
+                        }
+                  }
+                  transition={
+                    reduced
+                      ? undefined
+                      : { duration: 7.5, repeat: Infinity, ease: "easeInOut" }
+                  }
+                >
+                  <ZodiacGlyph sign={sign} size={64} draw={!reduced} />
+                </motion.div>
               ) : null}
               <div className="ak-sky__energy-copy">
                 <span>ENERJİ</span>
@@ -116,6 +136,16 @@ export function DailySkyExperienceSection({ astronomy }: Props) {
                   <CountUp value={sample.energy} />
                   <em> / 100</em>
                 </strong>
+              </div>
+              <div className="ak-sky__energy-track" aria-hidden>
+                <motion.span
+                  className="ak-sky__energy-fill"
+                  initial={reduced ? { scaleX: energy } : { scaleX: 0 }}
+                  whileInView={{ scaleX: energy }}
+                  viewport={{ once: true }}
+                  transition={{ duration: reduced ? 0 : 1.15, ease: EASE_OUT, delay: 0.2 }}
+                  style={{ originX: 0 }}
+                />
               </div>
             </div>
 

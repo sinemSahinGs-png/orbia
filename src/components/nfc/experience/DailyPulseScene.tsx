@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { LivingCore } from "@/components/nfc/experience/LivingCore";
+import { OX_EASE } from "@/components/nfc/experience/Reveal";
 import type { ZodiacSign } from "@/lib/zodiac/signs";
 import { formatIstanbulDate } from "@/lib/zodiac";
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
@@ -12,118 +12,95 @@ type Props = {
   moonPhase: string;
   headline: string;
   energy: number;
-  emotional: number;
-  focus: number;
-  social: number;
 };
 
-const HINTS: Record<string, string> = {
-  Duygu: "İç dünyanın bugünkü temposu",
-  Odak: "Dikkatini tek noktaya toplama hali",
-  Sosyal: "İlişki ve paylaşım açıklığı",
-};
-
-function metricLabel(value: number | null | undefined) {
-  if (value == null || !Number.isFinite(value)) return "—";
-  return String(Math.round(value));
-}
-
-export function DailyPulseScene({
-  sign,
-  moonPhase,
-  headline,
-  energy,
-  emotional,
-  focus,
-  social,
-}: Props) {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.15 });
+/** Cinematic daily opening — no chips, no tabs. */
+export function DailyPulseScene({ sign, moonPhase, headline, energy }: Props) {
   const reduced = useReducedMotionSafe();
-  const [active, setActive] = useState<"emotional" | "focus" | "social" | null>(null);
-
-  const rows = [
-    { key: "emotional" as const, label: "Duygu", value: emotional },
-    { key: "focus" as const, label: "Odak", value: focus },
-    { key: "social" as const, label: "Sosyal", value: social },
-  ];
 
   return (
-    <>
-      <section ref={ref} className="ox-hero" aria-labelledby="ox-pulse-heading">
-        <div className="ox-hero__glow" aria-hidden />
+    <section id="ox-today" className="ox-hero" aria-labelledby="ox-pulse-heading">
+      <div className="ox-hero__glow" aria-hidden />
+      <div className="ox-hero__dust" aria-hidden>
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
 
-        <div className="ox-hero__content">
-          <motion.p
-            className="ox-hero__brand"
-            initial={reduced ? false : { letterSpacing: "0.18em" }}
-            animate={inView ? { letterSpacing: "0.14em" } : undefined}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          >
-            ORBIA
-          </motion.p>
-          <motion.p
-            className="ox-hero__date"
-            initial={reduced ? false : { y: 6 }}
-            animate={inView ? { y: 0 } : undefined}
-            transition={{ duration: 0.85, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {formatIstanbulDate()}
-            <span className="ox-status__sep" aria-hidden>
-              ·
-            </span>
-            {moonPhase}
-          </motion.p>
+      <div className="ox-hero__content">
+        <motion.p
+          className="ox-hero__brand"
+          initial={reduced ? false : { opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: reduced ? 0 : 0.1, ease: OX_EASE }}
+        >
+          ORBIA
+        </motion.p>
 
+        <motion.p
+          className="ox-hero__date"
+          initial={reduced ? false : { opacity: 0, y: 8, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.55, delay: reduced ? 0 : 0.22, ease: OX_EASE }}
+        >
+          {formatIstanbulDate()}
+          <span className="ox-status__sep" aria-hidden>
+            ·
+          </span>
+          {moonPhase}
+        </motion.p>
+
+        {reduced ? (
+          <h1 className="ox-sign-name">{sign.nameTr}</h1>
+        ) : (
           <motion.h1
             className="ox-sign-name"
-            initial={reduced ? false : { y: 10 }}
-            animate={inView ? { y: 0 } : undefined}
-            transition={{ duration: 1, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 28, clipPath: "inset(0 0 100% 0)" }}
+            animate={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
+            transition={{ duration: 0.72, delay: 0.35, ease: OX_EASE }}
           >
             {sign.nameTr}
           </motion.h1>
+        )}
 
-          <p id="ox-pulse-heading" className="ox-hero__msg">
-            {headline}
-          </p>
+        <motion.p
+          id="ox-pulse-heading"
+          className="ox-hero__msg"
+          initial={reduced ? false : { opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: reduced ? 0 : 0.55, ease: OX_EASE }}
+        >
+          {headline}
+        </motion.p>
 
-          <LivingCore mode="hero" energy={energy} label={`Bugünün yoğunluğu ${energy}`} className="ox-hero__core" />
+        <motion.div
+          className="ox-hero__core-wrap"
+          initial={reduced ? false : { opacity: 0, scale: 0.94, y: 12 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: reduced ? 0 : 0.75, ease: OX_EASE }}
+        >
+          <LivingCore
+            mode="hero"
+            energy={energy}
+            label={`Bugünün yoğunluğu ${energy}`}
+            className="ox-hero__core"
+          />
+        </motion.div>
 
-          <a href="#ox-signal" className="ox-btn ox-btn--secondary ox-hero__cta">
-            Bugünün sinyalini aç
-          </a>
-        </div>
-      </section>
-
-      <section id="ox-signal" className="ox-scene ox-signal ox-scene--nebula-a" aria-label="Günün üç değeri">
-        <p className="ox-kicker">Günün üç değeri</p>
-        <h2 className="ox-heading">Yoğunluğun katmanları</h2>
-
-        <LivingCore
-          mode="metrics"
-          metrics={{ emotional, focus, social }}
-          activeMetric={active}
-          className="ox-signal__core"
-        />
-
-        <ul className="ox-signal__list">
-          {rows.map((row) => (
-            <li key={row.key}>
-              <button
-                type="button"
-                className={`ox-signal__row${active === row.key ? " is-on" : ""}`}
-                onClick={() => setActive((v) => (v === row.key ? null : row.key))}
-                aria-expanded={active === row.key}
-              >
-                <span className="ox-signal__label">{row.label}</span>
-                <strong className="ox-signal__value">{metricLabel(row.value)}</strong>
-              </button>
-              {active === row.key ? <p className="ox-signal__hint">{HINTS[row.label]}</p> : null}
-            </li>
-          ))}
-        </ul>
-      </section>
-    </>
+        <motion.div
+          className="ox-hero__cue"
+          aria-hidden
+          initial={reduced ? false : { opacity: 0 }}
+          animate={{ opacity: 0.55 }}
+          transition={{ duration: 0.5, delay: reduced ? 0 : 1.7, ease: OX_EASE }}
+        >
+          <span className="ox-hero__cue-line" />
+          <span className="ox-hero__cue-label">Kaydır</span>
+        </motion.div>
+      </div>
+    </section>
   );
 }

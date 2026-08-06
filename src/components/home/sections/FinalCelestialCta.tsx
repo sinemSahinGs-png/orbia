@@ -69,7 +69,7 @@ export function FinalCelestialCta() {
               cx={x}
               cy={y}
               r={1.2}
-              fill="rgba(183,161,106,0.55)"
+              fill="rgba(255,26,140,0.55)"
               initial={reduced ? { opacity: 0.8 } : { opacity: 0, scale: 0.4 }}
               whileInView={{ opacity: 0.8, scale: 1 }}
               viewport={{ once: true }}

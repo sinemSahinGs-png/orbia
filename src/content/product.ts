@@ -57,8 +57,8 @@ export const productMedia: ProductMediaAssets = {
   keychainMainAlt: null, // orbia-keychain-main.webp not present
   keychainBackNfc: null, // orbia-keychain-back-nfc.webp not present
   keychainInHand: null, // orbia-keychain-in-hand.webp not present
-  heroDesktopVideo: "/videos/orbia-cosmic-desktop.mov",
-  heroMobileVideo: "/videos/orbia-cosmic-mobile.mov",
+  heroDesktopVideo: "/videos/orbia-cosmic-desktop.mp4",
+  heroMobileVideo: "/videos/orbia-cosmic-mobile.mp4",
   heroFallbackMp4: "/videos/orbia-cosmic-ambient.mp4",
   heroPoster: "/videos/orbia-cosmic-poster.webp",
   nfcDemoVideo: null, // orbia-nfc-demo.mp4 not present

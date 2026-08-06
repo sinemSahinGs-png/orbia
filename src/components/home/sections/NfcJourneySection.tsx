@@ -8,7 +8,6 @@ import {
   useReducedMotion,
   useScroll,
   useTransform,
-  type MotionValue,
 } from "framer-motion";
 import { SectionHeading } from "@/components/home/visuals/SectionHeading";
 import { nfcJourneyContent } from "@/content/home";
@@ -23,13 +22,13 @@ function NfcWave({ active }: { active: boolean }) {
           key={r}
           d={`M ${40 - r} 34 A ${r} ${r} 0 0 1 ${40 + r} 34`}
           fill="none"
-          stroke="rgba(183,161,106,0.75)"
+          stroke="url(#ak-nfc-wave-grad)"
           strokeWidth={1.2}
           initial={false}
           animate={
             reduced || !active
-              ? { opacity: active ? 0.6 : 0.18, pathLength: active ? 1 : 0.4 }
-              : { opacity: [0.18, 0.85, 0.18], pathLength: [0.35, 1, 0.35] }
+              ? { opacity: active ? 0.7 : 0.2, pathLength: active ? 1 : 0.4 }
+              : { opacity: [0.2, 0.95, 0.2], pathLength: [0.35, 1, 0.35] }
           }
           transition={
             reduced || !active
@@ -38,61 +37,14 @@ function NfcWave({ active }: { active: boolean }) {
           }
         />
       ))}
+      <defs>
+        <linearGradient id="ak-nfc-wave-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#FFB0DE" />
+          <stop offset="55%" stopColor="#FF4EC8" />
+          <stop offset="100%" stopColor="#FF1493" />
+        </linearGradient>
+      </defs>
     </svg>
-  );
-}
-
-function NfcPhoneVisual({
-  activeStep,
-  progress,
-}: {
-  activeStep: number;
-  progress: number | MotionValue<number>;
-}) {
-  const reduced = useReducedMotion();
-  const isNfc = activeStep === 2;
-
-  return (
-    <div className="ak-nfc__phone" aria-hidden>
-      <div className="ak-nfc__phone-frame">
-        <div className="ak-nfc__phone-screen">
-          <motion.div
-            className="ak-nfc__phone-pulse"
-            animate={
-              reduced
-                ? { opacity: isNfc ? 0.55 : 0.2, scale: 1 }
-                : isNfc
-                  ? { opacity: [0.25, 0.85, 0.25], scale: [0.92, 1.08, 0.92] }
-                  : { opacity: 0.2, scale: 1 }
-            }
-            transition={
-              isNfc && !reduced
-                ? { duration: 1.8, repeat: Infinity, ease: "easeInOut" }
-                : { duration: 0.4 }
-            }
-          />
-          <span className="ak-nfc__phone-label">
-            {nfcJourneyContent.steps[activeStep]?.title ?? ""}
-          </span>
-        </div>
-      </div>
-      <div className="ak-nfc__phone-path">
-        <svg viewBox="0 0 12 160" fill="none" preserveAspectRatio="none">
-          <path d="M6 4 V156" stroke="rgba(215,217,223,0.16)" strokeWidth="1" />
-          <motion.path
-            d="M6 4 V156"
-            stroke="rgba(183,161,106,0.9)"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            style={
-              typeof progress === "number"
-                ? { pathLength: progress }
-                : { pathLength: progress }
-            }
-          />
-        </svg>
-      </div>
-    </div>
   );
 }
 
@@ -123,20 +75,12 @@ export function NfcJourneySection() {
       aria-labelledby="nfc-journey-heading"
     >
       <div className="ak-nfc__glow" aria-hidden />
-      <div className="ak-container ak-nfc__grid">
-        <div className="ak-nfc__sticky">
-          <SectionHeading
-            id="nfc-journey-heading"
-            heading={nfcJourneyContent.heading}
-            description={nfcJourneyContent.description}
-          />
-          <div className="ak-nfc__hero-visual">
-            <NfcPhoneVisual
-              activeStep={active}
-              progress={reduced ? 1 : pathLength}
-            />
-          </div>
-        </div>
+      <div className="ak-container ak-nfc__grid ak-nfc__grid--steps-only">
+        <SectionHeading
+          id="nfc-journey-heading"
+          heading={nfcJourneyContent.heading}
+          description={nfcJourneyContent.description}
+        />
 
         <div className="ak-nfc__steps-wrap">
           <div className="ak-nfc__rail" aria-hidden>

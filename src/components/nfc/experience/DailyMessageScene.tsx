@@ -1,6 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import {
+  FadeBodyReveal,
+  LineStaggerReveal,
+  MaskedHeadingReveal,
+  OX_EASE,
+  SceneLabelReveal,
+} from "@/components/nfc/experience/Reveal";
 import type { ZodiacSign } from "@/lib/zodiac/signs";
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
 
@@ -12,40 +20,71 @@ type Props = {
   avoidText: string;
 };
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+function splitAdvice(advice: string) {
+  const parts = advice
+    .split(/(?<=[.!?])\s+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  return parts.length ? parts : [advice];
+}
 
-/**
- * Message content must stay readable even if motion IO never fires.
- * Never gate copy behind opacity: 0 initial.
- */
+/** Immersive editorial daily message — no dark rectangle card. */
 export function DailyMessageScene({ summary, advice, avoidText }: Props) {
   const reduced = useReducedMotionSafe();
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.28 });
+  const lines = splitAdvice(advice);
 
   return (
-    <section className="ox-scene ox-message" aria-labelledby="ox-message-heading">
-      <motion.p
-        className="ox-kicker"
-        initial={reduced ? false : { letterSpacing: "0.1em" }}
-        whileInView={{ letterSpacing: "0.06em" }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, ease: EASE }}
+    <section
+      id="ox-message"
+      ref={ref}
+      className="ox-scene ox-message ox-scene--nebula-a"
+      aria-labelledby="ox-message-heading"
+    >
+      <SceneLabelReveal>Günün mesajı</SceneLabelReveal>
+
+      <motion.div
+        className="ox-message__divider"
+        aria-hidden
+        initial={reduced ? false : { scaleX: 0, opacity: 0.3 }}
+        animate={inView || reduced ? { scaleX: 1, opacity: 1 } : undefined}
+        transition={{ duration: 0.7, delay: 0.08, ease: OX_EASE }}
+        style={{ transformOrigin: "left center" }}
       >
-        Günün mesajı
-      </motion.p>
-      <div className="ox-message__layout">
-        <span className="ox-message__rail" aria-hidden>
-          <span />
-          <span />
-          <span />
-        </span>
-        <div className="ox-message__copy">
-          <p id="ox-message-heading" className="ox-message__pull">
-            {advice}
-          </p>
-          <p className="ox-body">{summary}</p>
-          <p className="ox-message__soft">{avoidText}</p>
+        <span />
+        <span className="ox-message__star" />
+        <span />
+      </motion.div>
+
+      {reduced ? (
+        <p id="ox-message-heading" className="ox-message__pull">
+          {advice}
+        </p>
+      ) : lines.length > 1 ? (
+        <div id="ox-message-heading">
+          <LineStaggerReveal lines={lines} className="ox-message__pull" delay={0.18} stagger={0.1} />
         </div>
-      </div>
+      ) : (
+        <MaskedHeadingReveal className="ox-message__pull" as="p" delay={0.18}>
+          <span id="ox-message-heading">{advice}</span>
+        </MaskedHeadingReveal>
+      )}
+
+      <FadeBodyReveal delay={0.42} className="ox-body ox-message__support">
+        {summary}
+      </FadeBodyReveal>
+      <FadeBodyReveal delay={0.55} className="ox-message__soft">
+        {avoidText}
+      </FadeBodyReveal>
+
+      <motion.span
+        className="ox-message__mark"
+        aria-hidden
+        initial={reduced ? false : { opacity: 0, scale: 0.6 }}
+        animate={inView || reduced ? { opacity: 1, scale: 1 } : undefined}
+        transition={{ duration: 0.5, delay: 0.7, ease: OX_EASE }}
+      />
     </section>
   );
 }

@@ -18,5 +18,7 @@ const manrope = Manrope({
 
 /** Fonts for NFC atlas experience (`/[sign]`, `/k/[code]`). */
 export default function ExperienceLayout({ children }: { children: ReactNode }) {
-  return <div className={`ox-fonts ${instrument.variable} ${manrope.variable}`}>{children}</div>;
+  return (
+    <div className={`ox-fonts ${instrument.variable} ${manrope.variable}`}>{children}</div>
+  );
 }

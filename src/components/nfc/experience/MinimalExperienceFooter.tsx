@@ -69,24 +69,19 @@ export function MinimalExperienceFooter({ signSlug, onPair }: Props) {
             </div>
           ) : null}
         </div>
-        <p className="ox-kicker">Ürün</p>
+        <p className="ox-kicker">Fiziksel ORBIA</p>
         <h2 id="ox-product-heading" className="ox-heading">
-          Gökyüzünü yanında taşı.
+          Gökyüzünü sevdiğin birine de taşı.
         </h2>
         <p className="ox-body">
-          Burcuna özel ORBIA’yı edin. Her dokunuşta günün gökyüzü açılsın.
+          Bir ORBIA, her dokunuşta onun gökyüzünü yeniden açar.
         </p>
-        <ul className="ox-product__benefits">
-          <li>Burcuna özel gravür mühür</li>
-          <li>Her dokunuşta günlük gökyüzü</li>
-          <li>İkinci ORBIA ile ortak ritim</li>
-        </ul>
-        <div className="ox-actions">
+        <div className="ox-actions ox-product__actions">
           <Link href="/urunler" className="ox-btn ox-btn--primary">
-            ORBIA’nı seç
+            Bir ORBIA Hediye Et
           </Link>
           <Link href={`/urunler/${signSlug}`} className="ox-btn ox-btn--ghost">
-            Bu burcun ürünü
+            Koleksiyonu Gör
           </Link>
         </div>
       </section>

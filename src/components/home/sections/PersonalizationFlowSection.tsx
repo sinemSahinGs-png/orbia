@@ -60,7 +60,7 @@ export function PersonalizationFlowSection() {
                 cy="50"
                 r="46"
                 fill="none"
-                stroke="rgba(183,161,106,0.85)"
+                stroke="rgba(255,106,213,0.9)"
                 strokeWidth="1.4"
                 strokeLinecap="round"
                 strokeDasharray={289}

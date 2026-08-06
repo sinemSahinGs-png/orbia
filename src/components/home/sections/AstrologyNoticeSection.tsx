@@ -28,7 +28,7 @@ export function AstrologyNoticeSection() {
               width="99"
               height="99"
               fill="none"
-              stroke="rgba(183,161,106,0.55)"
+              stroke="rgba(255,26,140,0.55)"
               strokeWidth="0.4"
               initial={reduced ? { pathLength: 1 } : { pathLength: 0 }}
               whileInView={{ pathLength: 1 }}

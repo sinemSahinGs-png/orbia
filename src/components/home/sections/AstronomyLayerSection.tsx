@@ -6,6 +6,7 @@ import {
   useReducedMotion,
   useScroll,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
 import { SectionHeading } from "@/components/home/visuals/SectionHeading";
 import { CountUp } from "@/components/home/visuals/CountUp";
@@ -19,6 +20,8 @@ import {
 } from "@/lib/zodiac";
 import { EASE_OUT } from "@/lib/animation";
 
+const MOON_SRC = "/images/astronomy/moon.webp";
+
 type Props = {
   astronomy: AstronomySnapshot | null;
 };
@@ -31,14 +34,25 @@ export function AstronomyLayerSection({ astronomy }: Props) {
     offset: ["start 80%", "center center"],
   });
 
-  const illum = astronomy ? astronomy.illumination : 0;
-  const phaseReveal = useTransform(scrollYProgress, [0, 1], [0, illum]);
-  const shadowX = useTransform(phaseReveal, (v) => 40 - v * 80);
-  const labelOpacity = useTransform(scrollYProgress, [0.2, 0.55], [0, 1]);
-  const parallax = useTransform(scrollYProgress, [0, 1], [16, -10]);
+  const illum = astronomy ? astronomy.illumination : 0.45;
+  const phaseReveal = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0.18, Math.max(0.22, illum)],
+  );
+  const shadowPos = useTransform(phaseReveal, (v) => `${46 - v * 88}%`);
+  const shadowBg = useTransform(
+    shadowPos,
+    (x) =>
+      `radial-gradient(circle at ${x} 48%, transparent 38%, rgba(2,3,8,0.5) 56%, rgba(2,3,8,0.94) 72%)`,
+  );
+  const labelOpacity = useTransform(scrollYProgress, [0.15, 0.5], [0, 1]);
+  const parallax = useTransform(scrollYProgress, [0, 1], [14, -12]);
+  const moonRotate = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [-3, 3]);
 
   const stale = !astronomy || astronomy.stale;
   const percent = astronomy ? illuminationPercent(astronomy.illumination) : 0;
+  const staticShadow = `radial-gradient(circle at ${46 - illum * 88}% 48%, transparent 38%, rgba(2,3,8,0.5) 56%, rgba(2,3,8,0.94) 72%)`;
 
   return (
     <section
@@ -69,61 +83,34 @@ export function AstronomyLayerSection({ astronomy }: Props) {
 
           <motion.div
             className="ak-astro__moon"
-            aria-hidden={false}
             aria-label={
               astronomy
                 ? `Ay fazı: ${astronomy.moonPhaseName}, yüzde ${percent} aydınlanma`
                 : "Ay görseli"
             }
-            initial={reduced ? false : { opacity: 0.4, scale: 0.92 }}
+            initial={reduced ? false : { opacity: 0.35, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.9, ease: EASE_OUT }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 1, ease: EASE_OUT }}
+            style={reduced ? undefined : { rotate: moonRotate, y: parallax }}
           >
-            <svg viewBox="0 0 200 200" className="ak-astro__moon-svg">
-              <defs>
-                <radialGradient id="ak-moon-base" cx="35%" cy="30%" r="70%">
-                  <stop offset="0%" stopColor="#F2F0EA" />
-                  <stop offset="55%" stopColor="#C8CAD0" />
-                  <stop offset="100%" stopColor="#6E7380" />
-                </radialGradient>
-                <mask id="ak-moon-illum">
-                  <rect width="200" height="200" fill="black" />
-                  <circle cx="100" cy="100" r="78" fill="white" />
-                  {reduced ? (
-                    <circle
-                      cx={100 + (40 - illum * 80)}
-                      cy="100"
-                      r="78"
-                      fill="black"
-                    />
-                  ) : (
-                    <motion.circle
-                      cy="100"
-                      r="78"
-                      fill="black"
-                      style={{ cx: shadowX }}
-                    />
-                  )}
-                </mask>
-              </defs>
-              <circle cx="100" cy="100" r="78" fill="rgba(20,24,36,0.95)" />
-              <circle
-                cx="100"
-                cy="100"
-                r="78"
-                fill="url(#ak-moon-base)"
-                mask="url(#ak-moon-illum)"
+            <div className="ak-astro__moon-disk">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={MOON_SRC}
+                alt=""
+                width={800}
+                height={800}
+                className="ak-astro__moon-photo"
+                decoding="async"
               />
-              <circle
-                cx="100"
-                cy="100"
-                r="78"
-                fill="none"
-                stroke="rgba(183,161,106,0.28)"
-                strokeWidth="1"
+              <MoonShadow
+                reduced={!!reduced}
+                staticShadow={staticShadow}
+                shadowBg={shadowBg}
               />
-            </svg>
+              <span className="ak-astro__moon-rim" aria-hidden />
+            </div>
             <span className="ak-astro__point ak-astro__point--a" />
             <span className="ak-astro__point ak-astro__point--b" />
             <span className="ak-astro__point ak-astro__point--c" />
@@ -180,16 +167,39 @@ export function AstronomyLayerSection({ astronomy }: Props) {
             <li>
               <span>Tarih</span>
               <strong>
-                {astronomy ? formatIstanbulDate(astronomy.dateKey) : "—"}
+                {astronomy ? formatIstanbulDate(astronomy.dateKey) : formatIstanbulDate()}
               </strong>
-            </li>
-            <li>
-              <span>Saat dilimi</span>
-              <strong>Europe/Istanbul</strong>
             </li>
           </motion.ul>
         </div>
       </div>
     </section>
+  );
+}
+
+function MoonShadow({
+  reduced,
+  staticShadow,
+  shadowBg,
+}: {
+  reduced: boolean;
+  staticShadow: string;
+  shadowBg: MotionValue<string>;
+}) {
+  if (reduced) {
+    return (
+      <div
+        className="ak-astro__moon-shadow"
+        style={{ background: staticShadow }}
+        aria-hidden
+      />
+    );
+  }
+  return (
+    <motion.div
+      className="ak-astro__moon-shadow"
+      style={{ background: shadowBg }}
+      aria-hidden
+    />
   );
 }

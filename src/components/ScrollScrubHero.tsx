@@ -8,18 +8,29 @@ import { productMedia } from "@/content/product";
 const LEGACY_SCRUB_VIDEO = "/mc-hero-scrub.mp4";
 const LEGACY_SCRUB_POSTER = "/mc-hero-poster.jpg";
 /** Soft catch-up — scroll leads, frames ease behind. */
-const LERP_FACTOR = 0.065;
-const SEEK_THRESHOLD = 0.025;
+const LERP_FACTOR = 0.22;
+const SEEK_THRESHOLD = 1 / 48; // ~half frame at 24fps
 /**
- * Scrub travel must be long enough for short cosmic clips (~6s)
- * to advance slowly with scroll. Distance ≈ section − viewport.
- * ~3 viewports of travel ≈ 2s of video per screen.
+ * Scrub travel for short cosmic clips (~6s).
+ * Mobile stays cinematic without multi-screen black void.
  */
-const MOBILE_HEIGHT = "400svh";
-const DESKTOP_HEIGHT = "480vh";
+const MOBILE_HEIGHT = "140svh";
+const DESKTOP_HEIGHT = "300vh";
 
 const HERO_POSTER = productMedia.heroPoster ?? LEGACY_SCRUB_POSTER;
-const USE_COSMIC_HERO = Boolean(productMedia.heroDesktopVideo || productMedia.heroMobileVideo);
+
+function resolveHeroVideoSrc(isMobile: boolean): string {
+  const preferred = isMobile
+    ? productMedia.heroMobileVideo
+    : productMedia.heroDesktopVideo;
+  return (
+    preferred ??
+    productMedia.heroDesktopVideo ??
+    productMedia.heroMobileVideo ??
+    productMedia.heroFallbackMp4 ??
+    LEGACY_SCRUB_VIDEO
+  );
+}
 
 interface ScrollScrubHeroProps {
   demoHref?: string;
@@ -42,16 +53,17 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
   const currentTimeRef = useRef(0);
   const durationRef = useRef(0);
   const isVideoReadyRef = useRef(false);
+  const seekingRef = useRef(false);
 
   const [videoReady, setVideoReady] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   /**
-   * Critical: never default to desktop 280/380vh on mobile SSR/first paint.
+   * Critical: never default to desktop height on mobile SSR/first paint.
    * Height is primarily driven by CSS media queries; state only syncs scrub math.
    */
   const [sectionHeight, setSectionHeight] = useState<string | undefined>(undefined);
   const [heroVideoSrc, setHeroVideoSrc] = useState<string | null>(null);
-  const [usedFallbackMp4, setUsedFallbackMp4] = useState(false);
+  const [usedFallbackSrc, setUsedFallbackSrc] = useState(false);
 
   useEffect(() => {
     setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -65,15 +77,8 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
     };
 
     const updateVideoSrc = () => {
-      if (!USE_COSMIC_HERO) {
-        setHeroVideoSrc(LEGACY_SCRUB_VIDEO);
-        return;
-      }
-      const preferred = mediaQuery.matches
-        ? productMedia.heroMobileVideo
-        : productMedia.heroDesktopVideo;
-      setHeroVideoSrc(preferred ?? productMedia.heroFallbackMp4 ?? LEGACY_SCRUB_VIDEO);
-      setUsedFallbackMp4(false);
+      setHeroVideoSrc(resolveHeroVideoSrc(mediaQuery.matches));
+      setUsedFallbackSrc(false);
     };
 
     updateSectionHeight();
@@ -184,7 +189,6 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
         "-=0.2",
       );
 
-      /* Persist final states — no leftover clip/opacity */
       tl.set([...words1, ...words2, body, note, ...ctaItems].filter(Boolean), {
         clearProps: "filter",
         opacity: 1,
@@ -218,6 +222,7 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
     setVideoReady(false);
     targetProgressRef.current = 0;
     currentTimeRef.current = 0;
+    seekingRef.current = false;
 
     const markReady = () => {
       if (cancelled || isVideoReadyRef.current) return;
@@ -228,29 +233,11 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
         durationRef.current = video.duration;
       }
       try {
-        if (Math.abs(video.currentTime) > SEEK_THRESHOLD) {
-          video.currentTime = 0;
-        }
+        video.currentTime = 0;
       } catch {
         /* ignore seek errors before enough data */
       }
       setVideoReady(true);
-
-      /* Warm decoder so scrub seeks land on frames instead of blanking. */
-      void video
-        .play()
-        .then(() => {
-          if (cancelled) return;
-          video.pause();
-          try {
-            video.currentTime = currentTimeRef.current;
-          } catch {
-            /* ignore */
-          }
-        })
-        .catch(() => {
-          /* autoplay warm-up optional */
-        });
     };
 
     const onLoadedMetadata = () => {
@@ -267,26 +254,32 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
       markReady();
     };
 
+    const onCanPlayThrough = () => {
+      markReady();
+    };
+
+    const onSeeked = () => {
+      seekingRef.current = false;
+    };
+
     const onError = () => {
-      if (
-        !usedFallbackMp4 &&
-        productMedia.heroFallbackMp4 &&
-        heroVideoSrc !== productMedia.heroFallbackMp4
-      ) {
-        setUsedFallbackMp4(true);
-        setHeroVideoSrc(productMedia.heroFallbackMp4);
+      const fallback = productMedia.heroFallbackMp4;
+      if (!usedFallbackSrc && fallback && heroVideoSrc !== fallback) {
+        setUsedFallbackSrc(true);
+        setHeroVideoSrc(fallback);
         return;
       }
-      /* Poster remains visible */
     };
 
     video.addEventListener("loadedmetadata", onLoadedMetadata);
     video.addEventListener("loadeddata", onLoadedData);
     video.addEventListener("canplay", onCanPlay);
+    video.addEventListener("canplaythrough", onCanPlayThrough);
+    video.addEventListener("seeked", onSeeked);
     video.addEventListener("error", onError);
 
     const readyTimeout = window.setTimeout(() => {
-      /* keep spinner subtle; do not force videoReady without a frame */
+      /* do not force ready without a frame */
     }, 1200);
 
     try {
@@ -302,7 +295,6 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
       onLoadedMetadata();
     }
 
-    /* Scroll scrub: video advances with scroll, stays paused otherwise */
     if (!reduceMotion) {
       const sticky = stickyRef.current;
       if (sticky) {
@@ -328,9 +320,11 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
           if (!duration) return;
 
           const progress = targetProgressRef.current;
-          /* Linear map: equal scroll → equal time (slow, deliberate). */
-          const target = progress * duration;
-          const lerpFactor = progress > 0.94 ? 0.28 : LERP_FACTOR;
+          const target = Math.min(duration, Math.max(0, progress * duration));
+          /* Catch up faster when far behind so scrub never feels stuck. */
+          const gap = Math.abs(target - currentTimeRef.current);
+          const lerpFactor =
+            gap > 0.35 ? 0.55 : progress > 0.94 ? 0.4 : LERP_FACTOR;
 
           currentTimeRef.current += (target - currentTimeRef.current) * lerpFactor;
 
@@ -340,12 +334,17 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
 
           if (!video.paused) video.pause();
 
-          if (Math.abs(video.currentTime - currentTimeRef.current) > SEEK_THRESHOLD) {
+          const delta = Math.abs(video.currentTime - currentTimeRef.current);
+          if (delta > SEEK_THRESHOLD && !seekingRef.current) {
+            seekingRef.current = true;
             try {
               video.currentTime = currentTimeRef.current;
             } catch {
-              /* ignore mid-seek */
+              seekingRef.current = false;
             }
+            window.setTimeout(() => {
+              seekingRef.current = false;
+            }, 90);
           }
 
           if (hintRef.current) {
@@ -368,7 +367,7 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
         };
 
         window.addEventListener("resize", onResize);
-        ScrollTrigger.refresh();
+        requestAnimationFrame(() => ScrollTrigger.refresh());
 
         return () => {
           cancelled = true;
@@ -379,6 +378,8 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
           video.removeEventListener("loadedmetadata", onLoadedMetadata);
           video.removeEventListener("loadeddata", onLoadedData);
           video.removeEventListener("canplay", onCanPlay);
+          video.removeEventListener("canplaythrough", onCanPlayThrough);
+          video.removeEventListener("seeked", onSeeked);
           video.removeEventListener("error", onError);
           video.pause();
         };
@@ -409,10 +410,12 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
       video.removeEventListener("loadeddata", onLoadedData);
       video.removeEventListener("loadeddata", showStaticFrame);
       video.removeEventListener("canplay", onCanPlay);
+      video.removeEventListener("canplaythrough", onCanPlayThrough);
+      video.removeEventListener("seeked", onSeeked);
       video.removeEventListener("error", onError);
       video.pause();
     };
-  }, [reduceMotion, heroVideoSrc, usedFallbackMp4]);
+  }, [reduceMotion, heroVideoSrc, usedFallbackSrc]);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -456,24 +459,6 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
 
         <div className="hero-scrub__wash" aria-hidden />
         <div className="hero-scrub__veil" aria-hidden />
-
-        <div className="hero-scrub__particles" aria-hidden>
-          {Array.from({ length: 18 }).map((_, i) => (
-            <span
-              key={i}
-              className="hero-scrub__particle"
-              style={{ "--i": i } as React.CSSProperties}
-            />
-          ))}
-        </div>
-
-        <div
-          className={`hero-scrub__loading${videoReady || reduceMotion ? " hero-scrub__loading--hidden" : ""}`}
-          aria-live="polite"
-          aria-busy={!videoReady && !reduceMotion}
-        >
-          <span className="hero-scrub__loading-pulse" />
-        </div>
 
         <div ref={copyRef} className="hero-scrub__copy">
           <div className="hero-scrub__copy-inner">

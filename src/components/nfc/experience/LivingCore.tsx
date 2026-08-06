@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { CSSProperties } from "react";
+import { useId, type CSSProperties } from "react";
 import type { MotionValue } from "framer-motion";
+import { CountUp } from "@/components/home/visuals/CountUp";
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
 
 export type LivingCoreMode = "hero" | "metrics" | "map" | "eclipse" | "split" | "merge";
@@ -18,6 +19,9 @@ type Props = {
   energy?: number;
   metrics?: MetricChannels;
   activeMetric?: keyof MetricChannels | null;
+  /** Optional center readout for metrics panel tabs. */
+  centerValue?: number;
+  centerCaption?: string;
   className?: string;
   label?: string;
   splitLabels?: [string, string];
@@ -44,13 +48,19 @@ export function LivingCore({
   energy = 70,
   metrics,
   activeMetric = null,
+  centerValue,
+  centerCaption,
   className = "",
   label,
   splitLabels = ["Senin ORBIA’n", "Sinyal bekleniyor"],
   style,
 }: Props) {
   const reduced = useReducedMotionSafe();
+  const uid = useId().replace(/:/g, "");
+  const gradId = `lc-gold-ring-${uid}`;
+  const glowId = `lc-soft-glow-${uid}`;
   const main = ringDash(energy, 36);
+  const highlight = nodeAt(50, 50, 36, (Math.max(0, Math.min(100, energy)) / 100) * 300 - 90, 1.6);
   const e = metrics ? ringDash(metrics.emotional, 34) : null;
   const f = metrics ? ringDash(metrics.focus, 26) : null;
   const s = metrics ? ringDash(metrics.social, 18) : null;
@@ -89,10 +99,11 @@ export function LivingCore({
             d="M8 18 Q 40 6, 70 18 T 132 18"
             fill="none"
             stroke="var(--astral-lilac)"
-            strokeWidth="0.9"
+            strokeWidth="1.35"
+            strokeOpacity={merged ? 0.95 : 0.72}
             strokeDasharray="2 5"
             initial={reduced ? false : { pathLength: 0, opacity: 0.25 }}
-            whileInView={{ pathLength: 1, opacity: merged ? 0.9 : 0.55 }}
+            whileInView={{ pathLength: 1, opacity: merged ? 0.95 : 0.72 }}
             viewport={{ once: true }}
             transition={{ duration: 1.15, ease: EASE }}
           />
@@ -109,6 +120,15 @@ export function LivingCore({
               transition={{ delay: 0.35 + i * 0.09, duration: 0.45 }}
             />
           ))}
+          {!reduced ? (
+            <circle r="1.55" fill="#F2E6C4" opacity="0.85">
+              <animateMotion
+                dur="7.5s"
+                repeatCount="indefinite"
+                path="M8 18 Q 40 6, 70 18 T 132 18"
+              />
+            </circle>
+          ) : null}
         </svg>
         <div className={`lc-split__core lc-split__core--b${merged ? " is-on" : ""}`}>
           <svg className="lc-split__svg" viewBox="0 0 100 100" aria-hidden>
@@ -210,59 +230,118 @@ export function LivingCore({
   const fActive = activeMetric === "focus" || !activeMetric;
   const sActive = activeMetric === "social" || !activeMetric;
 
+  const metricCenter =
+    mode === "metrics" && centerValue != null && Number.isFinite(centerValue)
+      ? Math.round(centerValue)
+      : null;
+
   return (
-    <div className={`lc lc--${mode} ${className}`} aria-hidden={!label} aria-label={label}>
+    <div
+      className={`lc lc--${mode}${reduced ? "" : " lc--alive"} ${className}`}
+      aria-hidden={!label}
+      aria-label={label}
+    >
       <svg className="lc__svg" viewBox="0 0 100 100">
         {mode === "hero" ? (
           <>
-            <g className={reduced ? undefined : "lc__orbit-outer"}>
-              <circle cx="50" cy="50" r="46" fill="none" stroke="var(--line-soft)" strokeWidth="0.4" />
-              {[0, 110, 200, 290].map((deg, i) => {
-                const n = nodeAt(50, 50, 44, deg, 0.85);
-                return (
-                  <circle
-                    key={deg}
-                    className={reduced ? undefined : `lc__twinkle lc__twinkle--${i}`}
-                    cx={n.x}
-                    cy={n.y}
-                    r={n.size}
-                    fill="var(--astral-lilac)"
-                    opacity="0.5"
-                  />
-                );
-              })}
-            </g>
-            <g className={reduced ? undefined : "lc__orbit-mid"}>
-              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(215,202,235,0.16)" strokeWidth="0.35" />
-            </g>
-            <g className={reduced ? undefined : "lc__sway"}>
-              <path
-                d="M18 62 Q 28 28, 50 22 Q 78 28, 84 58"
-                fill="none"
-                stroke="var(--astral-lilac)"
-                strokeOpacity="0.35"
-                strokeWidth="0.55"
-              />
-            </g>
+            <defs>
+              <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#E8D5A8" stopOpacity="0.7" />
+                <stop offset="40%" stopColor="var(--sign-primary)" stopOpacity="0.95" />
+                <stop offset="100%" stopColor="#C9B6E8" stopOpacity="0.75" />
+              </linearGradient>
+              <radialGradient id={`${uid}-core`} cx="50%" cy="42%" r="55%">
+                <stop offset="0%" stopColor="rgba(232,213,168,0.12)" />
+                <stop offset="55%" stopColor="rgba(74,40,110,0.35)" />
+                <stop offset="100%" stopColor="rgba(16,13,23,0.92)" />
+              </radialGradient>
+              <filter id={glowId} x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="1.35" result="b" />
+                <feMerge>
+                  <feMergeNode in="b" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <circle cx="50" cy="50" r="47" fill={`url(#${uid}-core)`} opacity="0.9" />
+            <circle
+              cx="50"
+              cy="50"
+              r="46"
+              fill="none"
+              stroke="rgba(232,213,168,0.32)"
+              strokeWidth="0.4"
+            />
+            {[0, 72, 144, 216, 288].map((deg, i) => {
+              const n = nodeAt(50, 50, 46, deg, 0.75);
+              return (
+                <circle
+                  key={deg}
+                  className={reduced ? undefined : `lc__twinkle lc__twinkle--${i % 4}`}
+                  cx={n.x}
+                  cy={n.y}
+                  r={n.size}
+                  fill="rgba(232,213,168,0.9)"
+                  opacity="0.6"
+                />
+              );
+            })}
+            <circle
+              cx="50"
+              cy="50"
+              r="42"
+              fill="none"
+              stroke="rgba(215,202,235,0.2)"
+              strokeWidth="0.35"
+              strokeDasharray="1.4 3.6"
+            />
+            <path
+              d="M18 62 Q 28 28, 50 22 Q 78 28, 84 58"
+              fill="none"
+              stroke="var(--astral-lilac)"
+              strokeOpacity="0.28"
+              strokeWidth="0.5"
+            />
+            <circle
+              cx="50"
+              cy="50"
+              r="36"
+              fill="none"
+              stroke="rgba(215,202,235,0.14)"
+              strokeWidth="1.45"
+            />
             <motion.circle
               cx="50"
               cy="50"
               r="36"
               fill="none"
-              stroke="var(--sign-primary)"
-              strokeWidth="1.35"
+              stroke={`url(#${gradId})`}
+              strokeWidth="1.7"
               strokeLinecap="round"
               strokeDasharray={`${main.dash} ${main.c}`}
               transform="rotate(-90 50 50)"
+              filter={`url(#${glowId})`}
               initial={reduced ? false : { strokeDasharray: `0 ${main.c}` }}
               whileInView={{ strokeDasharray: `${main.dash} ${main.c}` }}
               viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: EASE }}
+              transition={{ duration: 1.15, ease: EASE }}
             />
-            <circle cx="50" cy="50" r="14" fill="var(--paper-dark)" stroke="var(--line-soft)" strokeWidth="0.45" />
-            <text x="50" y="54.5" textAnchor="middle" className="lc__value" fill="var(--text-primary)">
-              {Number.isFinite(energy) ? Math.round(energy) : "—"}
-            </text>
+            <circle
+              cx={highlight.x}
+              cy={highlight.y}
+              r="2.25"
+              fill="#F2E6C4"
+              opacity="0.95"
+              filter={`url(#${glowId})`}
+            />
+            <circle
+              cx="50"
+              cy="50"
+              r="17"
+              fill="rgba(16,13,23,0.9)"
+              stroke="rgba(232,213,168,0.28)"
+              strokeWidth="0.5"
+            />
           </>
         ) : null}
 
@@ -283,8 +362,8 @@ export function LivingCore({
                 r={activeMetric === "emotional" ? 35 : 34}
                 fill="none"
                 stroke="var(--sign-primary)"
-                strokeOpacity={eActive ? 0.9 : 0.32}
-                strokeWidth={activeMetric === "emotional" ? 1.85 : 1.5}
+                strokeOpacity={eActive ? 0.92 : 0.28}
+                strokeWidth={activeMetric === "emotional" ? 1.95 : 1.45}
                 strokeLinecap="round"
                 strokeDasharray={e.empty ? `0 ${e.c}` : `${e.dash} ${e.c}`}
                 transform="rotate(-100 50 50)"
@@ -301,8 +380,8 @@ export function LivingCore({
                 r={activeMetric === "focus" ? 27 : 26}
                 fill="none"
                 stroke="var(--cosmic-violet)"
-                strokeOpacity={fActive ? 0.85 : 0.28}
-                strokeWidth={activeMetric === "focus" ? 1.7 : 1.35}
+                strokeOpacity={fActive ? 0.88 : 0.24}
+                strokeWidth={activeMetric === "focus" ? 1.8 : 1.3}
                 strokeLinecap="round"
                 strokeDasharray={f.empty ? `0 ${f.c}` : `${f.dash} ${f.c}`}
                 transform="rotate(-40 50 50)"
@@ -319,8 +398,8 @@ export function LivingCore({
                 r={activeMetric === "social" ? 19 : 18}
                 fill="none"
                 stroke="var(--astral-lilac)"
-                strokeOpacity={sActive ? 0.85 : 0.28}
-                strokeWidth={activeMetric === "social" ? 1.55 : 1.25}
+                strokeOpacity={sActive ? 0.88 : 0.24}
+                strokeWidth={activeMetric === "social" ? 1.65 : 1.2}
                 strokeLinecap="round"
                 strokeDasharray={s.empty ? `0 ${s.c}` : `${s.dash} ${s.c}`}
                 transform="rotate(50 50 50)"
@@ -334,10 +413,10 @@ export function LivingCore({
               <motion.circle
                 cx={eNode.x}
                 cy={eNode.y}
-                r="1.5"
+                r="1.55"
                 fill="var(--sign-primary)"
                 initial={reduced ? false : { opacity: 0, cx: 50, cy: 50 }}
-                whileInView={{ opacity: eActive ? 1 : 0.4, cx: eNode.x, cy: eNode.y }}
+                whileInView={{ opacity: eActive ? 1 : 0.35, cx: eNode.x, cy: eNode.y }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.55, duration: 0.55, ease: EASE }}
               />
@@ -346,10 +425,10 @@ export function LivingCore({
               <motion.circle
                 cx={fNode.x}
                 cy={fNode.y}
-                r="1.35"
+                r="1.4"
                 fill="var(--cosmic-violet)"
                 initial={reduced ? false : { opacity: 0, cx: 50, cy: 50 }}
-                whileInView={{ opacity: fActive ? 1 : 0.35, cx: fNode.x, cy: fNode.y }}
+                whileInView={{ opacity: fActive ? 1 : 0.3, cx: fNode.x, cy: fNode.y }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.72, duration: 0.55, ease: EASE }}
               />
@@ -358,20 +437,50 @@ export function LivingCore({
               <motion.circle
                 cx={sNode.x}
                 cy={sNode.y}
-                r="1.25"
+                r="1.3"
                 fill="var(--astral-lilac)"
                 initial={reduced ? false : { opacity: 0, cx: 50, cy: 50 }}
-                whileInView={{ opacity: sActive ? 1 : 0.35, cx: sNode.x, cy: sNode.y }}
+                whileInView={{ opacity: sActive ? 1 : 0.3, cx: sNode.x, cy: sNode.y }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.9, duration: 0.55, ease: EASE }}
               />
             ) : null}
-            <circle cx="50" cy="50" r="5" fill="none" stroke="var(--line-soft)" strokeWidth="0.5" />
-            <circle cx="50" cy="50" r="1.4" fill="var(--astral-lilac)" opacity="0.7" />
+            {metricCenter == null ? (
+              <>
+                <circle cx="50" cy="50" r="5" fill="none" stroke="var(--line-soft)" strokeWidth="0.5" />
+                <circle cx="50" cy="50" r="1.4" fill="var(--astral-lilac)" opacity="0.7" />
+              </>
+            ) : (
+              <circle
+                cx="50"
+                cy="50"
+                r="14"
+                fill="rgba(16,13,23,0.82)"
+                stroke="rgba(232,213,168,0.18)"
+                strokeWidth="0.4"
+              />
+            )}
           </>
         ) : null}
       </svg>
-      {showEnergyNumeral ? <p className="lc__caption">Bugünün yoğunluğu</p> : null}
+
+      {showEnergyNumeral ? (
+        <div className="lc__readout">
+          <p className="lc__num">
+            {Number.isFinite(energy) ? <CountUp value={Math.round(energy)} duration={0.85} /> : "—"}
+          </p>
+          <p className="lc__caption">Bugünün yoğunluğu</p>
+        </div>
+      ) : null}
+
+      {metricCenter != null ? (
+        <div className="lc__readout lc__readout--metric">
+          <p className="lc__num">
+            <CountUp key={metricCenter} value={metricCenter} duration={0.7} />
+          </p>
+          <p className="lc__caption">{centerCaption ?? "Kanal"}</p>
+        </div>
+      ) : null}
     </div>
   );
 }

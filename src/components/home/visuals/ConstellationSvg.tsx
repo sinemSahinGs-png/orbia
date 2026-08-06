@@ -12,7 +12,7 @@ type Props = {
 
 export function ConstellationSvg({
   data,
-  color = "rgba(183, 161, 106, 0.75)",
+  color = "rgba(255, 26, 140, 0.75)",
   className = "",
   animate = true,
 }: Props) {

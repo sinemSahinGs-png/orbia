@@ -6,6 +6,7 @@ import { MotionConfig } from "framer-motion";
 import { CosmicBackdrop } from "@/components/nfc/experience/CosmicBackdrop";
 import { NfcIntroSequence } from "@/components/nfc/experience/NfcIntroSequence";
 import { DailyPulseScene } from "@/components/nfc/experience/DailyPulseScene";
+import { AstralStatusSeal } from "@/components/nfc/experience/AstralStatusSeal";
 import { DailyMessageScene } from "@/components/nfc/experience/DailyMessageScene";
 import { CelestialSignature } from "@/components/nfc/experience/CelestialSignature";
 import { SkyTimeScene } from "@/components/nfc/experience/SkyTimeScene";
@@ -17,6 +18,7 @@ import {
 import { DailyShareCard } from "@/components/nfc/experience/DailyShareCard";
 import { MinimalExperienceFooter } from "@/components/nfc/experience/MinimalExperienceFooter";
 import { OrbitalProgress } from "@/components/nfc/experience/OrbitalProgress";
+import { ExperienceStageMarks } from "@/components/nfc/experience/ExperienceStageMarks";
 import { useNfcIntroState } from "@/hooks/use-nfc-intro-state";
 import { usePendingPairCompletion } from "@/hooks/use-pending-pair-completion";
 import { getZodiacCollectionItem } from "@/content/zodiac";
@@ -32,6 +34,14 @@ type Props = {
   reading: DailyReading;
   astronomy: AstronomySnapshot;
 };
+
+function dailyKeyword(advice: string, energy: number) {
+  const trimmed = advice.replace(/[.;].*$/, "").trim();
+  if (trimmed.length <= 28) return trimmed;
+  if (energy >= 80) return "Yoğun bir açıklık";
+  if (energy >= 60) return "Ölçülü bir netlik";
+  return "Sakin bir yön";
+}
 
 export function NfcExperienceShell({ code, sign, reading, astronomy }: Props) {
   const intro = useNfcIntroState();
@@ -92,9 +102,14 @@ export function NfcExperienceShell({ code, sign, reading, astronomy }: Props) {
             moonPhase={astronomy.moonPhaseName}
             headline={reading.headline}
             energy={reading.energyScore}
+          />
+          <AstralStatusSeal
+            energy={reading.energyScore}
             emotional={reading.emotionalScore}
             focus={reading.focusScore}
             social={reading.socialScore}
+            keyword={dailyKeyword(reading.advice, reading.energyScore)}
+            summary={reading.summary}
           />
           <DailyMessageScene
             sign={sign}
@@ -123,6 +138,8 @@ export function NfcExperienceShell({ code, sign, reading, astronomy }: Props) {
             signSlug={sign.slug}
           />
         </div>
+
+        {!intro.isIntro ? <ExperienceStageMarks /> : null}
       </div>
     </MotionConfig>
   );

@@ -113,7 +113,7 @@ export const personalizationContent = {
   ],
   metals: [
     { id: "silver", label: "Fırçalanmış Gümüş", tone: "#D7D9DF" },
-    { id: "gold", label: "Ay Altını", tone: "#B7A16A" },
+    { id: "gold", label: "Ay Altını", tone: "#FF6AD5" },
     { id: "graphite", label: "Grafit", tone: "#6B7078" },
   ],
   maxPersonalizationLength: 18,

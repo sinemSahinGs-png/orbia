@@ -26,18 +26,25 @@
 .memoora-home-premium {
   --hp-black: var(--memoora-world-black, #050609);
   --hp-emerald: var(--memoora-emerald);
-  --hp-champagne: var(--memoora-gold);
-  --hp-glow: var(--memoora-soft-gold);
+  --hp-champagne: #FF6AD5;
+  --hp-glow: #FF9AE0;
   --hp-ivory: var(--memoora-ivory);
   --hp-muted: rgba(232, 232, 232, 0.76);
   --hp-max: 1180px;
   --hp-pad: 22px;
 
+  /* Open neon pink → deep neon gradient accents */
+  --memoora-gold: #FF6AD5;
+  --memoora-soft-gold: #FF9AE0;
+  --memoora-gold-light: #FFC2EC;
+  --memoora-neon-mid: #FF4EC8;
+  --memoora-neon-deep: #FF1493;
+  --memoora-neon-grad: linear-gradient(120deg, #FFC2EC 0%, #FF6AD5 42%, #FF4EC8 72%, #FF1493 100%);
   --memoora-world-black: #050609;
-  --memoora-world-deep: #0C0A12;
-  --memoora-world-emerald: #16121F;
-  --memoora-world-moss: #221A2E;
-  --memoora-world-gold: #9B6DFF;
+  --memoora-world-deep: #12060C;
+  --memoora-world-emerald: #1A0A12;
+  --memoora-world-moss: #2A1018;
+  --memoora-world-gold: #FF6AD5;
   --memoora-world-ivory: #F2F0EA;
 
   position: relative;
@@ -100,14 +107,14 @@ body:has(.memoora-home-premium) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 52px;
-  padding: 0 28px;
-  border: 1px solid rgba(155, 109, 255, 0.42);
-  background: linear-gradient(135deg, rgba(155, 109, 255, 0.14), rgba(35, 18, 70, 0.5));
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1px solid rgba(255, 106, 213, 0.42);
+  background: linear-gradient(135deg, rgba(255, 106, 213, 0.14), rgba(60, 8, 35, 0.5));
   color: var(--memoora-ivory);
-  font-size: 11px;
+  font-size: max(0.8125rem, 13px);
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
   transition: border-color 0.35s ease, box-shadow 0.35s ease;
@@ -115,12 +122,14 @@ body:has(.memoora-home-premium) {
 
 .cine-btn:hover {
   border-color: var(--memoora-soft-gold);
-  box-shadow: inset 0 0 20px rgba(183, 148, 244, 0.1);
+  box-shadow: inset 0 0 20px rgba(255, 92, 173, 0.1);
 }
 
 .cine-btn--ghost {
   background: transparent;
-  border-color: rgba(245, 241, 232, 0.22);
+  border-color: rgba(245, 241, 232, 0.28);
+  color: rgba(245, 241, 232, 0.88);
+  font-size: max(0.8125rem, 13px);
 }
 
 /* Soft visual stage — dissolves into shared world */
@@ -134,7 +143,7 @@ body:has(.memoora-home-premium) {
   background:
     radial-gradient(circle at 50% 42%, rgba(90, 45, 160, 0.17), transparent 58%),
     linear-gradient(180deg, rgba(20, 10, 40, 0.45), rgba(8, 4, 16, 0.12));
-  border: 1px solid rgba(155, 109, 255, 0.08);
+  border: 1px solid rgba(255, 106, 213, 0.08);
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.22);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 94%, transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 94%, transparent 100%);
@@ -252,9 +261,9 @@ body:has(.memoora-home-premium) {
 .ambient-blob--primary {
   background: radial-gradient(
     ellipse at center,
-    rgba(88, 40, 160, 0.95) 0%,
-    rgba(55, 25, 100, 0.55) 30%,
-    rgba(30, 12, 55, 0.22) 56%,
+    rgba(255, 106, 213, 0.75) 0%,
+    rgba(196, 0, 106, 0.45) 30%,
+    rgba(80, 8, 40, 0.22) 56%,
     transparent 76%
   );
   filter: blur(72px);
@@ -264,8 +273,8 @@ body:has(.memoora-home-premium) {
   border-radius: 45%;
   background: radial-gradient(
     ellipse at center,
-    rgba(75, 35, 140, 0.85) 0%,
-    rgba(45, 20, 85, 0.35) 48%,
+    rgba(230, 0, 122, 0.7) 0%,
+    rgba(120, 10, 55, 0.35) 48%,
     transparent 74%
   );
   filter: blur(82px);
@@ -274,7 +283,7 @@ body:has(.memoora-home-premium) {
 .ambient-blob--tertiary {
   background: radial-gradient(
     circle,
-    rgba(60, 28, 110, 0.75),
+    rgba(255, 92, 173, 0.55),
     transparent 70%
   );
   filter: blur(70px);
@@ -317,8 +326,8 @@ body:has(.memoora-home-premium) {
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(25, 12, 50, 0.28) 35%,
-    rgba(10, 5, 22, 0.18) 62%,
+    rgba(60, 8, 32, 0.28) 35%,
+    rgba(25, 4, 14, 0.18) 62%,
     transparent 100%
   );
   opacity: 0.55;
@@ -335,8 +344,8 @@ body:has(.memoora-home-premium) {
   opacity: var(--ambient-gold-alpha);
   background: radial-gradient(
     circle,
-    rgba(155, 109, 255, 0.55) 0%,
-    rgba(124, 58, 237, 0.12) 38%,
+    rgba(255, 106, 213, 0.55) 0%,
+    rgba(196, 0, 106, 0.12) 38%,
     transparent 70%
   );
   filter: blur(58px);
@@ -443,7 +452,7 @@ body:has(.memoora-home-premium) {
 
 .home-nav--solid {
   background: rgba(6, 4, 12, 0.72);
-  border-bottom: 1px solid rgba(155, 109, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 106, 213, 0.1);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
@@ -511,7 +520,7 @@ body:has(.memoora-home-premium) {
   height: 100%;
   padding: 100px 32px;
   background: linear-gradient(180deg, #1A0F2E, #08060C);
-  border-left: 1px solid rgba(155, 109, 255, 0.12);
+  border-left: 1px solid rgba(255, 106, 213, 0.12);
 }
 
 .home-nav__drawer-nav a {
@@ -526,14 +535,14 @@ body:has(.memoora-home-premium) {
   position: relative;
   /* CSS-first height avoids desktop default flashing on mobile SSR.
      Tall travel = short clip advances slowly while scrolling. */
-  height: 400svh;
-  height: 400dvh;
+  height: 140svh;
+  height: 140dvh;
   background: var(--hp-black, #050609);
 }
 
 @media (min-width: 769px) {
   .hero-scrub {
-    height: 480vh;
+    height: 300vh;
   }
 }
 
@@ -569,7 +578,7 @@ body:has(.memoora-home-premium) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 16%;
+  object-position: center center;
   opacity: 0;
   transition: opacity 0.55s ease;
   background: transparent;
@@ -634,7 +643,7 @@ body:has(.memoora-home-premium) {
   border-radius: 50%;
   background: var(--hp-glow);
   opacity: 0.3;
-  box-shadow: 0 0 10px rgba(183, 148, 244, 0.35);
+  box-shadow: 0 0 10px rgba(255, 92, 173, 0.35);
   animation: hero-particle 8s ease-in-out infinite;
   animation-delay: calc(var(--i) * 0.45s);
   top: calc(12% + (var(--i) * 4.2%));
@@ -674,7 +683,7 @@ body:has(.memoora-home-premium) {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1px solid rgba(155, 109, 255, 0.35);
+  border: 1px solid rgba(255, 106, 213, 0.35);
   border-top-color: var(--hp-glow);
   animation: hero-spin 1s linear infinite;
 }
@@ -714,17 +723,19 @@ body:has(.memoora-home-premium) {
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.4em;
-  color: rgba(183, 148, 244, 0.9);
+  color: rgba(255, 92, 173, 0.9);
 }
 
 .hero-title {
   margin: 0 0 clamp(20px, 3.5vw, 28px);
-  max-width: min(92vw, 100%);
+  max-width: 100%;
+  padding-inline: 2px;
+  box-sizing: border-box;
   font-family: var(--font-display), var(--font-serif);
-  font-size: clamp(2.85rem, 11vw, 5.2rem);
+  font-size: clamp(2.55rem, 9.5vw, 5.2rem);
   font-weight: 500;
-  line-height: 0.9;
-  letter-spacing: -0.045em;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
   color: #f7f3ea;
   overflow: visible;
   text-shadow: 0 2px 24px rgba(5, 6, 9, 0.55);
@@ -741,7 +752,7 @@ body:has(.memoora-home-premium) {
 
 .hero-title-line--accent {
   font-size: 0.9em;
-  color: #9B6DFF;
+  color: #FF6AD5;
 }
 
 .hero-word {
@@ -756,7 +767,7 @@ body:has(.memoora-home-premium) {
 }
 
 .hero-title-line--accent .hero-word {
-  background: linear-gradient(110deg, #C4B5FD 0%, #9B6DFF 55%, #7C3AED 100%);
+  background: linear-gradient(110deg, #FFC2EC 0%, #FF6AD5 55%, #FF1493 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -780,7 +791,7 @@ body:has(.memoora-home-premium) {
   font-size: max(0.88rem, 14px);
   font-weight: 500;
   letter-spacing: 0.01em;
-  color: #C4B5FD;
+  color: #FFC2EC;
   text-shadow: 0 1px 12px rgba(5, 6, 9, 0.45);
 }
 
@@ -819,9 +830,9 @@ body:has(.memoora-home-premium) {
   position: relative;
   overflow: hidden;
   padding: 0 28px;
-  border: 1px solid rgba(155, 109, 255, 0.5);
+  border: 1px solid rgba(255, 106, 213, 0.5);
   border-radius: 999px;
-  background: linear-gradient(110deg, #C4B5FD 0%, #9B6DFF 38%, #7C4DFF 72%, #B794F4 100%);
+  background: linear-gradient(110deg, #FFC2EC 0%, #FF6AD5 38%, #FF1493 72%, #FF9AE0 100%);
   background-size: 180% 180%;
   background-position: 0% 50%;
   color: #0A0612;
@@ -1118,16 +1129,36 @@ body:has(.memoora-home-premium) {
   position: absolute;
   inset: 8% 2%;
   background:
-    radial-gradient(ellipse at center, rgba(12, 16, 22, 0.55), transparent 72%),
-    radial-gradient(ellipse at center, rgba(83, 107, 73, 0.16), transparent 70%);
+    radial-gradient(ellipse at center, rgba(12, 8, 14, 0.55), transparent 72%),
+    radial-gradient(ellipse at center, rgba(255, 106, 213, 0.12), transparent 68%);
   filter: blur(28px);
   pointer-events: none;
+}
+
+.cine-manifesto__glow {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: min(72vw, 520px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 106, 213, 0.28) 0%,
+    rgba(255, 106, 213, 0.08) 42%,
+    transparent 72%
+  );
+  filter: blur(36px);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .cine-manifesto__label {
   position: relative;
   z-index: 3;
   margin-bottom: 28px;
+  color: rgba(255, 92, 173, 0.78);
 }
 
 .cine-manifesto__text {
@@ -1139,9 +1170,11 @@ body:has(.memoora-home-premium) {
   font-family: var(--font-display), var(--font-serif);
   font-size: clamp(2.15rem, 8.6vw, 4.4rem);
   font-weight: 500;
-  line-height: 1.18;
+  line-height: 1.22;
   letter-spacing: -0.03em;
   color: rgba(245, 241, 232, 0.88);
+  perspective: 800px;
+  transform-style: preserve-3d;
 }
 
 .cine-manifesto__block {
@@ -1152,14 +1185,37 @@ body:has(.memoora-home-premium) {
   margin-top: 0.7em;
 }
 
-.cine-manifesto__text .word {
+.cine-manifesto__text .word,
+.cine-manifesto__word {
   display: inline-block;
-  margin-right: 0.2em;
-  color: rgba(245, 241, 232, 0.9);
+  margin-right: 0.22em;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
 }
 
 .cine-manifesto__text .is-gold {
-  color: #d4bf82 !important;
+  background: linear-gradient(120deg, #FFC2EC 0%, #FF6AD5 45%, #FF1493 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 18px rgba(255, 106, 213, 0.45));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cine-manifesto__text .is-gold.is-lit {
+    animation: manifesto-accent-glow 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes manifesto-accent-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 14px rgba(255, 106, 213, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(255, 78, 200, 0.7));
+  }
 }
 
 @media (min-width: 768px) {
@@ -1219,7 +1275,7 @@ body:has(.memoora-home-premium) {
   margin-bottom: 10px;
   font-size: 0.72rem;
   letter-spacing: 0.28em;
-  color: #9B6DFF;
+  color: #FF6AD5;
 }
 
 .cine-steps__title {
@@ -1245,7 +1301,7 @@ body:has(.memoora-home-premium) {
   top: 46%;
   width: 42%;
   aspect-ratio: 1;
-  border: 1px solid rgba(155, 109, 255, 0.35);
+  border: 1px solid rgba(255, 106, 213, 0.35);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   animation: nfc-pulse 3.2s ease-in-out infinite;
@@ -1257,7 +1313,7 @@ body:has(.memoora-home-premium) {
   top: 46%;
   width: 62%;
   aspect-ratio: 1;
-  border: 1px solid rgba(155, 109, 255, 0.18);
+  border: 1px solid rgba(255, 106, 213, 0.18);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   animation: nfc-pulse 3.2s ease-in-out infinite 0.4s;
@@ -1270,7 +1326,7 @@ body:has(.memoora-home-premium) {
   z-index: 2;
   transform: translateX(-50%);
   padding: 8px 14px;
-  border: 1px solid rgba(155, 109, 255, 0.28);
+  border: 1px solid rgba(255, 106, 213, 0.28);
   background: rgba(6, 4, 12, 0.55);
   font-size: 9px;
   letter-spacing: 0.22em;
@@ -1299,7 +1355,7 @@ body:has(.memoora-home-premium) {
   border-radius: 50%;
   background:
     radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.35), transparent 35%),
-    radial-gradient(circle at 50% 50%, rgba(183, 148, 244, 0.3), rgba(35, 18, 70, 0.2));
+    radial-gradient(circle at 50% 50%, rgba(255, 92, 173, 0.3), rgba(60, 8, 35, 0.2));
   border: 1px solid rgba(245, 241, 232, 0.2);
 }
 
@@ -1307,13 +1363,13 @@ body:has(.memoora-home-premium) {
   width: min(88vw, 440px);
   height: 1px;
   margin: 8px auto 0;
-  background: rgba(155, 109, 255, 0.12);
+  background: rgba(255, 106, 213, 0.12);
 }
 
 .cine-steps__stage-progress span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #9B6DFF, transparent);
+  background: linear-gradient(90deg, #FF6AD5, transparent);
 }
 
 .cine-memory-panel {
@@ -1324,7 +1380,7 @@ body:has(.memoora-home-premium) {
   justify-content: center;
   gap: 14px;
   padding: clamp(20px, 5vw, 28px);
-  border: 1px solid rgba(155, 109, 255, 0.22);
+  border: 1px solid rgba(255, 106, 213, 0.22);
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(6, 4, 12, 0.55));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -1339,7 +1395,7 @@ body:has(.memoora-home-premium) {
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #9B6DFF;
+  color: #FF6AD5;
 }
 
 .cine-memory-panel__quote {
@@ -1393,14 +1449,14 @@ body:has(.memoora-home-premium) {
     top: 24px;
     width: 1px;
     height: 220px;
-    background: rgba(155, 109, 255, 0.14);
+    background: rgba(255, 106, 213, 0.14);
   }
 
   .cine-steps__progress-fill {
     display: block;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, #f1d889, #9B6DFF);
+    background: linear-gradient(180deg, #FF9AE0, #FF6AD5);
     transform: scaleY(0);
     transform-origin: top;
   }
@@ -1420,7 +1476,7 @@ body:has(.memoora-home-premium) {
 
   .cine-steps__desktop-item {
     padding-bottom: 12px;
-    border-bottom: 1px solid rgba(155, 109, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 106, 213, 0.12);
   }
 
   .cine-steps__visual {
@@ -1506,7 +1562,7 @@ body:has(.memoora-home-premium) {
   height: 28px;
   border-radius: 62% 38% 58% 42% / 48% 42% 58% 52%;
   background: linear-gradient(145deg, #4f7358, #2a4634);
-  border: 1px solid rgba(155, 109, 255, 0.22);
+  border: 1px solid rgba(255, 106, 213, 0.22);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
   transform: rotate(18deg);
 }
@@ -1574,7 +1630,7 @@ body:has(.memoora-home-premium) {
   top: 46%;
   width: min(52%, 200px);
   aspect-ratio: 1;
-  border: 1px solid rgba(155, 109, 255, 0.35);
+  border: 1px solid rgba(255, 106, 213, 0.35);
   border-radius: 50%;
   transform: translate(-50%, -50%);
 }
@@ -1587,7 +1643,7 @@ body:has(.memoora-home-premium) {
   height: 10px;
   border-radius: 50%;
   background: var(--memoora-soft-gold);
-  box-shadow: 0 0 16px rgba(183, 148, 244, 0.5);
+  box-shadow: 0 0 16px rgba(255, 92, 173, 0.5);
   transform: translate(-50%, -50%);
 }
 
@@ -1604,7 +1660,7 @@ body:has(.memoora-home-premium) {
 .cine-nfc__annotation-line {
   width: 48px;
   height: 1px;
-  background: linear-gradient(90deg, #9B6DFF, transparent);
+  background: linear-gradient(90deg, #FF6AD5, transparent);
   transform-origin: left center;
 }
 
@@ -1634,7 +1690,7 @@ body:has(.memoora-home-premium) {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgba(245, 241, 232, 0.62);
-  border-bottom: 1px solid rgba(155, 109, 255, 0.28);
+  border-bottom: 1px solid rgba(255, 106, 213, 0.28);
   padding-bottom: 4px;
 }
 
@@ -1659,13 +1715,13 @@ body:has(.memoora-home-premium) {
   display: inline-flex;
   margin: 0 0 18px;
   padding: 7px 12px;
-  border: 1px solid rgba(155, 109, 255, 0.35);
+  border: 1px solid rgba(255, 106, 213, 0.35);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #A78BFA;
-  background: rgba(155, 109, 255, 0.08);
+  background: rgba(255, 106, 213, 0.08);
 }
 
 .cine-feature-tags {
@@ -1682,7 +1738,7 @@ body:has(.memoora-home-premium) {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(245, 241, 232, 0.68);
-  border-bottom: 1px solid rgba(155, 109, 255, 0.22);
+  border-bottom: 1px solid rgba(255, 106, 213, 0.22);
   padding-bottom: 4px;
 }
 
@@ -1713,7 +1769,7 @@ body:has(.memoora-home-premium) {
   -webkit-mask-image: none;
   mask-image: none;
   background: rgba(4, 20, 14, 0.74);
-  border: 1px solid rgba(155, 109, 255, 0.1);
+  border: 1px solid rgba(255, 106, 213, 0.1);
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.24);
 }
 
@@ -1754,7 +1810,7 @@ body:has(.memoora-home-premium) {
   margin: 0;
   font-size: 0.72rem;
   letter-spacing: 0.32em;
-  color: #9B6DFF;
+  color: #FF6AD5;
 }
 
 .cine-invite__names {
@@ -1815,7 +1871,7 @@ body:has(.memoora-home-premium) {
   max-width: min(92vw, 470px);
   margin-inline: auto;
   padding: 24px;
-  border: 1px solid rgba(155, 109, 255, 0.1);
+  border: 1px solid rgba(255, 106, 213, 0.1);
   background: rgba(4, 20, 14, 0.74);
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.24);
 }
@@ -1884,7 +1940,7 @@ body:has(.memoora-home-premium) {
 .cine-admin__chip--yes,
 .cine-admin__chip--new {
   color: #e3c666;
-  border-color: rgba(155, 109, 255, 0.35);
+  border-color: rgba(255, 106, 213, 0.35);
 }
 
 .cine-admin__chip--wait {
@@ -1908,7 +1964,7 @@ body:has(.memoora-home-premium) {
 
 .cine-quiz__support {
   margin-top: 10px;
-  color: rgba(183, 148, 244, 0.8);
+  color: rgba(255, 92, 173, 0.8);
 }
 
 .cine-quiz__stage {
@@ -1921,7 +1977,7 @@ body:has(.memoora-home-premium) {
 
 .cine-quiz__interface,
 .cine-quiz__board {
-  border: 1px solid rgba(155, 109, 255, 0.1);
+  border: 1px solid rgba(255, 106, 213, 0.1);
   background: rgba(4, 20, 14, 0.74);
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.24);
 }
@@ -1957,7 +2013,7 @@ body:has(.memoora-home-premium) {
 }
 
 .cine-quiz__answer--selected {
-  border-color: rgba(155, 109, 255, 0.7);
+  border-color: rgba(255, 106, 213, 0.7);
   background: rgba(90, 45, 160, 0.28);
   transform: scale(1.015);
 }
@@ -2000,8 +2056,8 @@ body:has(.memoora-home-premium) {
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: var(--hue, #9B6DFF);
-  box-shadow: 0 0 10px var(--hue, #9B6DFF);
+  background: var(--hue, #FF6AD5);
+  box-shadow: 0 0 10px var(--hue, #FF6AD5);
   animation: cine-quiz-spark 1.05s cubic-bezier(0.15, 0.7, 0.25, 1) forwards;
 }
 
@@ -2024,7 +2080,7 @@ body:has(.memoora-home-premium) {
   justify-content: space-between;
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid rgba(155, 109, 255, 0.2);
+  border-top: 1px solid rgba(255, 106, 213, 0.2);
   color: #e3c666;
   font-size: 1.05rem;
 }
@@ -2032,7 +2088,7 @@ body:has(.memoora-home-premium) {
 .cine-quiz__board {
   margin: 0;
   padding: 14px 18px;
-  border: 1px solid rgba(155, 109, 255, 0.1);
+  border: 1px solid rgba(255, 106, 213, 0.1);
   background: rgba(4, 20, 14, 0.74);
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.24);
 }
@@ -2050,7 +2106,7 @@ body:has(.memoora-home-premium) {
   gap: 12px;
   margin: 0 0 6px;
   padding: 6px 8px 14px;
-  border-bottom: 1px solid rgba(155, 109, 255, 0.16);
+  border-bottom: 1px solid rgba(255, 106, 213, 0.16);
 }
 
 .cine-quiz__board-kicker {
@@ -2116,8 +2172,8 @@ body:has(.memoora-home-premium) {
 }
 
 .cine-quiz__row--first {
-  background: rgba(155, 109, 255, 0.08);
-  box-shadow: inset 0 0 0 1px rgba(155, 109, 255, 0.28);
+  background: rgba(255, 106, 213, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 106, 213, 0.28);
 }
 
 @media (min-width: 1024px) {
@@ -2185,7 +2241,7 @@ body:has(.memoora-home-premium) {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(183, 148, 244, 0.45), transparent 70%);
+  background: radial-gradient(circle, rgba(255, 92, 173, 0.45), transparent 70%);
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -2211,7 +2267,7 @@ body:has(.memoora-home-premium) {
 .cine-product__annotation-line {
   width: 36px;
   height: 1px;
-  background: linear-gradient(90deg, #9B6DFF, transparent);
+  background: linear-gradient(90deg, #FF6AD5, transparent);
   transform-origin: left center;
 }
 
@@ -2272,7 +2328,7 @@ body:has(.memoora-home-premium) {
   z-index: 2;
   max-width: 220px;
   padding: 14px 16px;
-  border: 1px solid rgba(155, 109, 255, 0.2);
+  border: 1px solid rgba(255, 106, 213, 0.2);
   background: rgba(6, 4, 12, 0.72);
 }
 
@@ -2281,7 +2337,7 @@ body:has(.memoora-home-premium) {
   font-size: 0.7rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #9B6DFF;
+  color: #FF6AD5;
 }
 
 .cine-tree__quote {
@@ -2394,14 +2450,14 @@ body:has(.memoora-home-premium) {
   grid-template-columns: 48px 1fr;
   gap: 14px;
   padding: 18px 0;
-  border-top: 1px solid rgba(155, 109, 255, 0.14);
+  border-top: 1px solid rgba(255, 106, 213, 0.14);
 }
 
 .cine-complete__num {
   font-family: var(--font-display), var(--font-serif);
   font-size: clamp(1.35rem, 4.5vw, 1.75rem);
   letter-spacing: 0.08em;
-  color: rgba(155, 109, 255, 0.55);
+  color: rgba(255, 106, 213, 0.55);
   line-height: 1.1;
 }
 
@@ -2422,7 +2478,7 @@ body:has(.memoora-home-premium) {
 .cine-cta__note {
   margin: 18px 0 0;
   font-size: 0.85rem;
-  color: rgba(183, 148, 244, 0.8);
+  color: rgba(255, 92, 173, 0.8);
 }
 
 /* ── CTA ── */
@@ -2443,7 +2499,7 @@ body:has(.memoora-home-premium) {
   width: min(520px, 72vw);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(183, 148, 244, 0.16), transparent 70%);
+  background: radial-gradient(circle, rgba(255, 92, 173, 0.16), transparent 70%);
   filter: blur(18px);
   pointer-events: none;
 }
@@ -2493,15 +2549,15 @@ body:has(.memoora-home-premium) {
 
 /* ── Footer ── */
 .home-footer {
-  padding: 48px 0 36px;
+  padding: 40px 0 32px;
   background: transparent;
-  border-top: 1px solid rgba(155, 109, 255, 0.08);
+  border-top: 1px solid rgba(255, 106, 213, 0.08);
 }
 
 .home-footer__inner {
   max-width: var(--hp-max);
   margin: 0 auto;
-  padding: 0 var(--hp-pad);
+  padding: 0 max(22px, var(--hp-pad));
   text-align: center;
 }
 
@@ -2514,31 +2570,45 @@ body:has(.memoora-home-premium) {
 }
 
 .home-footer__tagline {
-  margin: 0 0 22px;
-  font-size: 0.92rem;
-  color: rgba(245, 241, 232, 0.55);
+  margin: 0 0 18px;
+  font-size: max(0.875rem, 14px);
+  color: rgba(245, 241, 232, 0.62);
 }
 
 .home-footer__links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px 24px;
-  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 12px;
+  justify-items: center;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 640px) {
+  .home-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 22px;
+  }
 }
 
 .home-footer__links a {
-  font-size: 11px;
-  letter-spacing: 0.12em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 8px;
+  font-size: max(0.8125rem, 13px);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
-  color: rgba(245, 241, 232, 0.7);
+  color: rgba(245, 241, 232, 0.78);
 }
 
 .home-footer__copy {
   margin: 0;
-  font-size: 11px;
-  color: rgba(245, 241, 232, 0.35);
+  font-size: max(0.75rem, 12px);
+  color: rgba(245, 241, 232, 0.4);
 }
 
 @media (min-width: 900px) {
@@ -2630,7 +2700,7 @@ body:has(.memoora-home-premium) {
   aspect-ratio: 16 / 10;
   overflow: hidden;
   background: #0a1a14;
-  border: 1px solid rgba(155, 109, 255, 0.12);
+  border: 1px solid rgba(255, 106, 213, 0.12);
 }
 
 .shared-memories__preview-frame > img {
@@ -2665,9 +2735,9 @@ body:has(.memoora-home-premium) {
 .shared-memories__cta--primary {
   min-height: 48px;
   padding: 0 26px;
-  border: 1px solid rgba(155, 109, 255, 0.38);
+  border: 1px solid rgba(255, 106, 213, 0.38);
   border-radius: 999px;
-  background: linear-gradient(110deg, #9B6DFF, #7C4DFF);
+  background: linear-gradient(110deg, #FF6AD5, #FF1493);
   color: #0A0612;
   font-size: 0.78rem;
   font-weight: 600;
@@ -2742,7 +2812,7 @@ body:has(.memoora-home-premium) {
 
 .shared-memory-ring__card.is-active {
   box-shadow: 0 6px 16px -10px rgba(0, 0, 0, 0.35);
-  border-color: rgba(155, 109, 255, 0.5);
+  border-color: rgba(255, 106, 213, 0.5);
 }
 
 .shared-memories__center {
@@ -2816,7 +2886,7 @@ body:has(.memoora-home-premium) {
   aspect-ratio: 380 / 210;
   overflow: hidden;
   background: #0a1a14;
-  border: 1px solid rgba(155, 109, 255, 0.16);
+  border: 1px solid rgba(255, 106, 213, 0.16);
 }
 
 .shared-memories__center-photo img {
@@ -2862,7 +2932,7 @@ body:has(.memoora-home-premium) {
   aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: 10px;
-  border: 1px solid rgba(155, 109, 255, 0.12);
+  border: 1px solid rgba(255, 106, 213, 0.12);
 }
 
 .shared-memories__reduced-card img {

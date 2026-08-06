@@ -29,13 +29,13 @@ export function OrbitalProgress() {
           cy="18"
           r={r}
           fill="none"
-          stroke="rgba(200,155,74,0.85)"
-          strokeWidth="1.4"
+          stroke="rgba(240,232,218,0.85)"
+          strokeWidth="1.5"
           strokeLinecap="round"
           strokeDasharray={`${dash} ${c}`}
           transform="rotate(-90 18 18)"
         />
-        <circle cx="18" cy="18" r="2.2" fill="rgba(240,232,218,0.7)" />
+        <circle cx="18" cy="18" r="2.2" fill="rgba(232,213,168,0.85)" />
       </svg>
     </div>
   );

@@ -9,6 +9,7 @@ import { getDemoCodeForSign } from "@/lib/nfc/demo-tags";
 import { parseOrbiaCodeFromNfcPayload } from "@/lib/nfc/parse-orbia-nfc";
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
 import { LivingCore } from "@/components/nfc/experience/LivingCore";
+import { OxReveal } from "@/components/nfc/experience/Reveal";
 
 type Props = {
   code: string;
@@ -291,7 +292,7 @@ export function SecondKeyPairingScene({ code, signSlug }: Props) {
     target: sectionRef,
     offset: ["start end", "center center"],
   });
-  const gap = useTransform(scrollYProgress, [0, 1], reduced ? ["1.2rem", "1.2rem"] : ["2.4rem", "0.75rem"]);
+  const gap = useTransform(scrollYProgress, [0, 1], reduced ? ["1.2rem", "1.2rem"] : ["2.8rem", "0.65rem"]);
 
   const openPair = (manual: boolean) => {
     setManualFirst(manual);
@@ -304,23 +305,39 @@ export function SecondKeyPairingScene({ code, signSlug }: Props) {
   };
 
   return (
-    <section ref={sectionRef} className="ox-scene ox-pair" aria-labelledby="ox-pair-heading">
-      <LivingCore mode="split" className="ox-pair__cores" style={{ gap }} />
-      <p className="ox-kicker">Eşleşme</p>
-      <h2 id="ox-pair-heading" className="ox-heading ox-pair__title">
-        İki ORBIA arasında ne var?
-      </h2>
-      <p className="ox-body ox-pair__body">
-        İkinci anahtarlığı okut. Bugünkü ortak ritminiz ortaya çıksın.
-      </p>
-      <div className="ox-actions ox-pair__actions">
-        <button type="button" className="ox-btn ox-btn--secondary" onClick={() => openPair(false)}>
-          İkinci ORBIA’yı okut
-        </button>
-        <button type="button" className="ox-btn ox-btn--ghost" onClick={() => openPair(true)}>
-          Kod veya burçla dene
-        </button>
+    <section
+      ref={sectionRef}
+      id="ox-pair"
+      className="ox-scene ox-pair ox-scene--nebula-d"
+      aria-labelledby="ox-pair-heading"
+    >
+      <div className="ox-pair__field" aria-hidden>
+        <LivingCore mode="split" className="ox-pair__cores" style={{ gap }} />
+        <span className="ox-pair__resonance" />
       </div>
+      <OxReveal delay={0.08}>
+        <p className="ox-kicker">ORBIA eşleşmesi</p>
+      </OxReveal>
+      <OxReveal delay={0.14} blur>
+        <h2 id="ox-pair-heading" className="ox-heading ox-pair__title">
+          İki ORBIA arasında ne var?
+        </h2>
+      </OxReveal>
+      <OxReveal delay={0.22}>
+        <p className="ox-body ox-pair__body">
+          İkinci anahtarlığı okut. Bugünkü ortak ritminiz ortaya çıksın.
+        </p>
+      </OxReveal>
+      <OxReveal delay={0.32}>
+        <div className="ox-actions ox-pair__actions">
+          <button type="button" className="ox-btn ox-btn--primary" onClick={() => openPair(false)}>
+            İkinci ORBIA’yı okut
+          </button>
+          <button type="button" className="ox-btn ox-btn--ghost" onClick={() => openPair(true)}>
+            Kod veya burçla dene
+          </button>
+        </div>
+      </OxReveal>
       <PairingScanOverlay
         key={open ? `pair-${manualFirst ? "manual" : "scan"}` : "pair-closed"}
         open={open}
