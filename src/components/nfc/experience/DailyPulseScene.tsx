@@ -33,18 +33,18 @@ export function DailyPulseScene({ sign, moonPhase, headline, energy }: Props) {
       <div className="ox-hero__content">
         <motion.p
           className="ox-hero__brand"
-          initial={reduced ? false : { opacity: 0, y: -12, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.7, delay: reduced ? 0 : 0.08, ease: OX_EASE }}
+          initial={reduced ? false : { opacity: 0.92, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: OX_EASE }}
         >
           ORBIA
         </motion.p>
 
         <motion.p
           className="ox-hero__date"
-          initial={reduced ? false : { opacity: 0, y: 10, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.7, delay: reduced ? 0 : 0.22, ease: OX_EASE }}
+          initial={reduced ? false : { opacity: 0.88, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: reduced ? 0 : 0.04, ease: OX_EASE }}
         >
           {formatIstanbulDate()}
           <span className="ox-status__sep" aria-hidden>
@@ -58,9 +58,9 @@ export function DailyPulseScene({ sign, moonPhase, headline, energy }: Props) {
         ) : (
           <motion.h1
             className="ox-sign-name"
-            initial={{ opacity: 0, y: 24, filter: "blur(12px)", clipPath: "inset(0 0 80% 0)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)" }}
-            transition={{ duration: 0.95, delay: 0.38, ease: OX_EASE }}
+            initial={{ opacity: 0.94, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.05, ease: OX_EASE }}
           >
             {sign.nameTr}
           </motion.h1>
@@ -69,18 +69,18 @@ export function DailyPulseScene({ sign, moonPhase, headline, energy }: Props) {
         <motion.p
           id="ox-pulse-heading"
           className="ox-hero__msg"
-          initial={reduced ? false : { opacity: 0, y: 16, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.85, delay: reduced ? 0 : 0.62, ease: OX_EASE }}
+          initial={reduced ? false : { opacity: 0.9, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: reduced ? 0 : 0.08, ease: OX_EASE }}
         >
           {headline}
         </motion.p>
 
         <motion.div
           className="ox-hero__core-wrap"
-          initial={reduced ? false : { opacity: 0, scale: 0.94, y: 12 }}
+          initial={reduced ? false : { opacity: 0.92, scale: 0.98, y: 6 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: reduced ? 0 : 0.75, ease: OX_EASE }}
+          transition={{ duration: 0.55, delay: reduced ? 0 : 0.1, ease: OX_EASE }}
         >
           <LivingCore
             mode="hero"

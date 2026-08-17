@@ -97,13 +97,12 @@ export function CosmicBackdrop() {
       <div className={`ox-cosmos__stars${reduced ? " is-static" : ""}`} />
       <div className="ox-cosmos__grain" />
       <div className="ox-cosmos__vignette" />
-      {reduced ? (
-        <div className="ox-cosmos__poster" style={{ backgroundImage: `url(${POSTER})` }} />
-      ) : (
+      <div className="ox-cosmos__poster" style={{ backgroundImage: `url(${POSTER})` }} />
+      {reduced ? null : (
         <video
           ref={videoRef}
           className="ox-cosmos__video"
-          style={{ opacity: videoOk ? undefined : 0 }}
+          style={videoOk ? undefined : { opacity: 0 }}
           muted
           playsInline
           loop
