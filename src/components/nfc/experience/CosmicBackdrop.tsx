@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
 
-const VIDEO_WEBM = "/videos/orbia-cosmic-ambient.webm";
-const VIDEO_MP4 = "/videos/orbia-cosmic-ambient.mp4";
+const VIDEO_MP4 = "/videos/orbia-zodiac-backdrop.mp4";
 const POSTER = "/videos/orbia-cosmic-poster.webp";
 
 /** Living violet galaxy — present but subordinate to content. */
@@ -60,7 +59,7 @@ export function CosmicBackdrop() {
       const h = Math.max(1, window.innerHeight);
       const t = Math.min(1, y / (h * 1.15));
       // Hero ~0.155 → content ~0.11 (≈30% quieter than prior 0.22 peak)
-      el.style.setProperty("--ox-video-op", String(0.155 - t * 0.045));
+      el.style.setProperty("--ox-video-op", String(0.32 - t * 0.08));
     };
     const onScroll = () => {
       cancelAnimationFrame(raf);
@@ -113,7 +112,6 @@ export function CosmicBackdrop() {
           poster={POSTER}
           aria-hidden
         >
-          <source src={VIDEO_WEBM} type="video/webm" />
           <source src={VIDEO_MP4} type="video/mp4" />
         </video>
       )}

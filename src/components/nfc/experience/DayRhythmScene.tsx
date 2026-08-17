@@ -8,10 +8,11 @@ import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
 
 type Props = {
   reading: DailyReading;
+  signSlug?: string;
 };
 
-export function DayRhythmScene({ reading }: Props) {
-  const slots = buildDayRhythm(reading);
+export function DayRhythmScene({ reading, signSlug }: Props) {
+  const slots = buildDayRhythm(reading, signSlug);
   const critical = useMemo(() => {
     const scores = [
       { id: "sabah" as const, v: reading.focusScore },

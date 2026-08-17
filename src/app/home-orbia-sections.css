@@ -1677,6 +1677,42 @@
 }
 
 /* ── Configurator ── */
+.ak-config {
+  overflow: hidden;
+}
+
+.ak-config__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ak-config > .ak-config__backdrop {
+  z-index: 0;
+}
+
+.ak-config__backdrop-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  filter: saturate(0.92) brightness(0.7);
+}
+
+.ak-config::before {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(5, 6, 9, 0.42) 0%, rgba(5, 6, 9, 0.62) 48%, rgba(5, 6, 9, 0.78) 100%),
+    radial-gradient(ellipse 80% 45% at 50% -8%, rgba(255, 106, 213, 0.1), transparent 60%);
+  opacity: 1;
+}
+
+.ak-config > .ak-container {
+  z-index: 2;
+}
+
 .ak-config__layout {
   display: grid;
   gap: 1.75rem;

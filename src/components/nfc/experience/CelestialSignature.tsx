@@ -153,10 +153,10 @@ export function CelestialSignature({ sign, dateKey, constellation }: Props) {
             );
           })}
 
-          <text x="4" y="12" fill="rgba(201,182,232,0.62)" fontSize="2.75" fontFamily="var(--font-ui), Manrope, sans-serif">
+          <text x="4" y="12" fill="rgba(201,182,232,0.62)" fontSize="2.75" fontFamily="var(--font-ui), Figtree, sans-serif">
             N
           </text>
-          <text x="88" y="22" fill="rgba(201,182,232,0.65)" fontSize="2.85" fontFamily="var(--font-ui), Manrope, sans-serif">
+          <text x="88" y="22" fill="rgba(201,182,232,0.65)" fontSize="2.85" fontFamily="var(--font-ui), Figtree, sans-serif">
             −20°
           </text>
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { FadeBodyReveal, MaskedHeadingReveal, SceneLabelReveal } from "@/components/nfc/experience/Reveal";
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
 
 type Props = {
@@ -69,13 +70,13 @@ export function MinimalExperienceFooter({ signSlug, onPair }: Props) {
             </div>
           ) : null}
         </div>
-        <p className="ox-kicker">Fiziksel ORBIA</p>
-        <h2 id="ox-product-heading" className="ox-heading">
-          Gökyüzünü sevdiğin birine de taşı.
-        </h2>
-        <p className="ox-body">
+        <SceneLabelReveal>Fiziksel ORBIA</SceneLabelReveal>
+        <MaskedHeadingReveal className="ox-heading" as="h2" delay={0.08}>
+          <span id="ox-product-heading">Gökyüzünü sevdiğin birine de taşı.</span>
+        </MaskedHeadingReveal>
+        <FadeBodyReveal delay={0.18} className="ox-body">
           Bir ORBIA, her dokunuşta onun gökyüzünü yeniden açar.
-        </p>
+        </FadeBodyReveal>
         <div className="ox-actions ox-product__actions">
           <Link href="/urunler" className="ox-btn ox-btn--primary">
             Bir ORBIA Hediye Et

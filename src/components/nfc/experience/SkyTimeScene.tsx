@@ -14,6 +14,7 @@ import { MaskedHeadingReveal, OX_EASE, SceneLabelReveal } from "@/components/nfc
 type Props = {
   astronomy: AstronomySnapshot;
   reading: DailyReading;
+  signSlug: string;
 };
 
 function formatIsoDate(iso: string) {
@@ -36,7 +37,7 @@ const CRITICAL_XY: Record<string, { x: number; y: number }> = {
 };
 
 /** Moon + day rhythm — all three times visible; active auto-emphasized. */
-export function SkyTimeScene({ astronomy, reading }: Props) {
+export function SkyTimeScene({ astronomy, reading, signSlug }: Props) {
   const reduced = useReducedMotionSafe();
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.22 });
@@ -48,7 +49,7 @@ export function SkyTimeScene({ astronomy, reading }: Props) {
   const moonSign = getSignBySlug(astronomy.moonTropicalSign);
   const pct = Math.round(illum * 100);
 
-  const slots = buildDayRhythm(reading);
+  const slots = buildDayRhythm(reading, signSlug);
   const active = currentRhythmId();
   const critical = useMemo(() => {
     const scores = [

@@ -4,14 +4,14 @@ import { motion, useInView } from "framer-motion";
 import { useRef, type ReactNode } from "react";
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
 
-export const OX_EASE = [0.22, 1, 0.36, 1] as const;
+export const OX_EASE = [0.16, 1, 0.3, 1] as const;
 
 export const OX_DUR = {
   tap: 0.12,
-  label: 0.4,
-  body: 0.55,
-  heading: 0.7,
-  section: 0.65,
+  label: 0.55,
+  body: 0.75,
+  heading: 0.9,
+  section: 0.8,
   chart: 0.95,
   count: 0.85,
   ring: 1.0,
@@ -29,14 +29,14 @@ type RevealProps = {
   amount?: number;
 };
 
-/** Soft fade + rise. Content always settles visible. */
+/** Soft fade + rise + blur-to-sharp. Plays once. */
 export function OxReveal({
   children,
   className = "",
   delay = 0,
   duration = OX_DUR.section,
-  y = 16,
-  blur = false,
+  y = 18,
+  blur = true,
   as = "div",
   amount = 0.2,
 }: RevealProps) {
@@ -54,11 +54,11 @@ export function OxReveal({
     <Tag
       ref={ref as never}
       className={className}
-      initial={{ opacity: 0.02, y, filter: blur ? "blur(6px)" : "blur(0px)" }}
+      initial={{ opacity: 0, y, filter: blur ? "blur(8px)" : "blur(0px)" }}
       animate={
         inView
           ? { opacity: 1, y: 0, filter: "blur(0px)" }
-          : { opacity: 0.02, y, filter: blur ? "blur(6px)" : "blur(0px)" }
+          : { opacity: 0, y, filter: blur ? "blur(8px)" : "blur(0px)" }
       }
       transition={{ duration, delay, ease: OX_EASE }}
     >
@@ -67,7 +67,7 @@ export function OxReveal({
   );
 }
 
-/** Masked vertical reveal for major headings. */
+/** Masked vertical reveal with blur-to-sharp for major headings. */
 export function MaskedHeadingReveal({
   children,
   className = "",
@@ -93,11 +93,11 @@ export function MaskedHeadingReveal({
     <Tag
       ref={ref as never}
       className={className}
-      initial={{ opacity: 0, y: 28, clipPath: "inset(0 0 100% 0)" }}
+      initial={{ opacity: 0, y: 22, filter: "blur(10px)", clipPath: "inset(0 0 88% 0)" }}
       animate={
         inView
-          ? { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }
-          : { opacity: 0, y: 28, clipPath: "inset(0 0 100% 0)" }
+          ? { opacity: 1, y: 0, filter: "blur(0px)", clipPath: "inset(0 0 0% 0)" }
+          : { opacity: 0, y: 22, filter: "blur(10px)", clipPath: "inset(0 0 88% 0)" }
       }
       transition={{ duration: OX_DUR.heading, delay, ease: OX_EASE }}
     >
@@ -106,13 +106,13 @@ export function MaskedHeadingReveal({
   );
 }
 
-/** Line / phrase stagger for poetic or body blocks. */
+/** Line / phrase stagger — no per-character animation. */
 export function LineStaggerReveal({
   lines,
   className = "",
   lineClassName = "",
   delay = 0,
-  stagger = 0.1,
+  stagger = 0.12,
   as = "p",
 }: {
   lines: string[];
@@ -147,9 +147,9 @@ export function LineStaggerReveal({
           key={i}
           className={lineClassName}
           style={{ display: "block" }}
-          initial={{ opacity: 0, y: 12 }}
-          animate={inView ? { opacity: 1, y: 0 } : undefined}
-          transition={{ duration: 0.55, delay: delay + i * stagger, ease: OX_EASE }}
+          initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+          animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : undefined}
+          transition={{ duration: 0.7, delay: delay + i * stagger, ease: OX_EASE }}
         >
           {line}
         </motion.span>
@@ -168,7 +168,7 @@ export function SceneLabelReveal({
   delay?: number;
 }) {
   return (
-    <OxReveal className={className} delay={delay} duration={OX_DUR.label} y={8} as="p">
+    <OxReveal className={className} delay={delay} duration={OX_DUR.label} y={10} as="p">
       {children}
     </OxReveal>
   );
@@ -184,7 +184,7 @@ export function FadeBodyReveal({
   delay?: number;
 }) {
   return (
-    <OxReveal className={className} delay={delay} duration={OX_DUR.body} y={10} as="p">
+    <OxReveal className={className} delay={delay} duration={OX_DUR.body} y={12} as="p">
       {children}
     </OxReveal>
   );
@@ -225,7 +225,7 @@ export function RevealStagger({
   return (
     <div className={className}>
       {children.map((child, i) => (
-        <OxReveal key={i} delay={i * 0.08}>
+        <OxReveal key={i} delay={i * 0.1}>
           {child}
         </OxReveal>
       ))}

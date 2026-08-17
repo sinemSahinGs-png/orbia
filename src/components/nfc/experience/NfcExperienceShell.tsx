@@ -119,7 +119,7 @@ export function NfcExperienceShell({ code, sign, reading, astronomy }: Props) {
             avoidText={reading.avoidText}
           />
           <CelestialSignature sign={sign} dateKey={astronomy.dateKey} constellation={constellation} />
-          <SkyTimeScene astronomy={astronomy} reading={reading} />
+          <SkyTimeScene astronomy={astronomy} reading={reading} signSlug={sign.slug} />
           <MicroRitualScene ritual={reading.ritual} dateKey={astronomy.dateKey} signSlug={sign.slug} />
           <SecondKeyPairingScene code={code} signSlug={sign.slug} />
           <DailyShareCard

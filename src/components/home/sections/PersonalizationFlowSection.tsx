@@ -44,6 +44,20 @@ export function PersonalizationFlowSection() {
       className="ak-section ak-config"
       aria-labelledby="personalization-heading"
     >
+      {reduced ? null : (
+        <div className="ak-config__backdrop" aria-hidden>
+          <video
+            className="ak-config__backdrop-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          >
+            <source src="/videos/orbia-zodiac-backdrop.mp4" type="video/mp4" />
+          </video>
+        </div>
+      )}
       <div className="ak-container ak-config__layout">
         <div className="ak-config__copy">
           <SectionHeading
