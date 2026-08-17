@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { SectionHeading } from "@/components/home/visuals/SectionHeading";
@@ -15,6 +15,8 @@ const STEP_COUNT = personalizationContent.steps.length;
 
 export function PersonalizationFlowSection() {
   const reduced = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const [loadBackdrop, setLoadBackdrop] = useState(false);
   const [step, setStep] = useState(0);
   const [signSlug, setSignSlug] = useState("aslan");
   const [surfaceId, setSurfaceId] = useState<string>(personalizationContent.surfaces[0].id);
@@ -38,13 +40,30 @@ export function PersonalizationFlowSection() {
   const goNext = () => setStep((s) => Math.min(STEP_COUNT - 1, s + 1));
   const goPrev = () => setStep((s) => Math.max(0, s - 1));
 
+  useEffect(() => {
+    if (reduced) return;
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        setLoadBackdrop(true);
+        io.disconnect();
+      },
+      { rootMargin: "240px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduced]);
+
   return (
     <section
+      ref={sectionRef}
       id="personalization"
       className="ak-section ak-config"
       aria-labelledby="personalization-heading"
     >
-      {reduced ? null : (
+      {!reduced && loadBackdrop ? (
         <div className="ak-config__backdrop" aria-hidden>
           <video
             className="ak-config__backdrop-video"
@@ -52,12 +71,12 @@ export function PersonalizationFlowSection() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="none"
           >
             <source src="/videos/orbia-zodiac-backdrop.mp4" type="video/mp4" />
           </video>
         </div>
-      )}
+      ) : null}
       <div className="ak-container ak-config__layout">
         <div className="ak-config__copy">
           <SectionHeading

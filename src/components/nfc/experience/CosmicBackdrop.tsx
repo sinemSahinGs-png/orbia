@@ -11,11 +11,22 @@ export function CosmicBackdrop() {
   const reduced = useReducedMotionSafe();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoOk, setVideoOk] = useState(false);
+  const [loadVideo, setLoadVideo] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (reduced) return;
+    const idle = window.requestIdleCallback?.(() => setLoadVideo(true), { timeout: 1600 });
+    const fallback = window.setTimeout(() => setLoadVideo(true), 1600);
+    return () => {
+      if (idle != null) window.cancelIdleCallback?.(idle);
+      window.clearTimeout(fallback);
+    };
+  }, [reduced]);
+
+  useEffect(() => {
     const v = videoRef.current;
-    if (!v || reduced) return;
+    if (!v || reduced || !loadVideo) return;
 
     let cancelled = false;
     const activate = () => {
@@ -46,7 +57,7 @@ export function CosmicBackdrop() {
       v.removeEventListener("playing", activate);
       v.removeEventListener("error", onErr);
     };
-  }, [reduced]);
+  }, [reduced, loadVideo]);
 
   useEffect(() => {
     if (reduced || typeof window === "undefined") return;
@@ -98,7 +109,7 @@ export function CosmicBackdrop() {
       <div className="ox-cosmos__grain" />
       <div className="ox-cosmos__vignette" />
       <div className="ox-cosmos__poster" style={{ backgroundImage: `url(${POSTER})` }} />
-      {reduced ? null : (
+      {!reduced && loadVideo ? (
         <video
           ref={videoRef}
           className="ox-cosmos__video"
@@ -107,13 +118,13 @@ export function CosmicBackdrop() {
           playsInline
           loop
           autoPlay
-          preload="metadata"
+          preload="none"
           poster={POSTER}
           aria-hidden
         >
           <source src={VIDEO_MP4} type="video/mp4" />
         </video>
-      )}
+      ) : null}
       <div className="ox-cosmos__read-veil" />
     </div>
   );

@@ -56,6 +56,7 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
   const seekingRef = useRef(false);
 
   const [videoReady, setVideoReady] = useState(false);
+  const [allowVideo, setAllowVideo] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   /**
    * Critical: never default to desktop height on mobile SSR/first paint.
@@ -68,6 +69,28 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
   useEffect(() => {
     setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    let enabled = false;
+    const enable = () => {
+      if (enabled) return;
+      enabled = true;
+      setAllowVideo(true);
+    };
+    window.addEventListener("scroll", enable, { once: true, passive: true });
+    window.addEventListener("pointerdown", enable, { once: true });
+    window.addEventListener("touchstart", enable, { once: true, passive: true });
+    const idle = window.requestIdleCallback?.(enable, { timeout: 2500 });
+    const fallback = window.setTimeout(enable, 2500);
+    return () => {
+      window.removeEventListener("scroll", enable);
+      window.removeEventListener("pointerdown", enable);
+      window.removeEventListener("touchstart", enable);
+      if (idle != null) window.cancelIdleCallback?.(idle);
+      window.clearTimeout(fallback);
+    };
+  }, [reduceMotion]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 768px)");
@@ -114,19 +137,6 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
       : [];
 
     const ctx = gsap.context(() => {
-      gsap.set([body, note, hint, ...ctaItems].filter(Boolean), {
-        opacity: 0,
-        y: 16,
-        filter: "blur(6px)",
-      });
-      gsap.set([...words1, ...words2], {
-        opacity: 0,
-        y: 36,
-        rotateX: -8,
-        filter: "blur(8px)",
-        transformOrigin: "50% 100%",
-      });
-
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       tl.to(
@@ -283,7 +293,7 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
     }, 1200);
 
     try {
-      video.load();
+      video.preload = "metadata";
     } catch {
       /* ignore */
     }
@@ -415,7 +425,7 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
       video.removeEventListener("error", onError);
       video.pause();
     };
-  }, [reduceMotion, heroVideoSrc, usedFallbackSrc]);
+  }, [reduceMotion, heroVideoSrc, usedFallbackSrc, allowVideo]);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -443,7 +453,7 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
           style={{ backgroundImage: `url(${HERO_POSTER})` }}
           aria-hidden
         />
-        {!reduceMotion && heroVideoSrc ? (
+        {!reduceMotion && allowVideo && heroVideoSrc ? (
           <video
             key={heroVideoSrc}
             ref={videoRef}
@@ -452,7 +462,7 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
             poster={HERO_POSTER}
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
             aria-hidden
           />
         ) : null}
