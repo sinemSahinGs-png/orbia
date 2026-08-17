@@ -16,9 +16,14 @@ export function CosmicBackdrop() {
 
   useEffect(() => {
     if (reduced) return;
-    const idle = window.requestIdleCallback?.(() => setLoadVideo(true), { timeout: 1600 });
-    const fallback = window.setTimeout(() => setLoadVideo(true), 1600);
+    const onInteract = () => setLoadVideo(true);
+    window.addEventListener("scroll", onInteract, { once: true, passive: true });
+    window.addEventListener("pointerdown", onInteract, { once: true });
+    const idle = window.requestIdleCallback?.(onInteract, { timeout: 4000 });
+    const fallback = window.setTimeout(onInteract, 4000);
     return () => {
+      window.removeEventListener("scroll", onInteract);
+      window.removeEventListener("pointerdown", onInteract);
       if (idle != null) window.cancelIdleCallback?.(idle);
       window.clearTimeout(fallback);
     };

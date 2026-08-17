@@ -81,14 +81,12 @@ export function ScrollScrubHero({ demoHref = "#demo" }: ScrollScrubHeroProps) {
     window.addEventListener("scroll", enable, { once: true, passive: true });
     window.addEventListener("pointerdown", enable, { once: true });
     window.addEventListener("touchstart", enable, { once: true, passive: true });
-    const idle = window.requestIdleCallback?.(enable, { timeout: 2500 });
-    const fallback = window.setTimeout(enable, 2500);
+    window.addEventListener("wheel", enable, { once: true, passive: true });
     return () => {
       window.removeEventListener("scroll", enable);
       window.removeEventListener("pointerdown", enable);
       window.removeEventListener("touchstart", enable);
-      if (idle != null) window.cancelIdleCallback?.(idle);
-      window.clearTimeout(fallback);
+      window.removeEventListener("wheel", enable);
     };
   }, [reduceMotion]);
 
