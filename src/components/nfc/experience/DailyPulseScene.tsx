@@ -6,6 +6,7 @@ import { OX_EASE } from "@/components/nfc/experience/Reveal";
 import type { ZodiacSign } from "@/lib/zodiac/signs";
 import { formatIstanbulDate } from "@/lib/zodiac";
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
+import { OrbiaMark } from "@/components/brand/OrbiaMark";
 
 type Props = {
   sign: ZodiacSign;
@@ -37,6 +38,7 @@ export function DailyPulseScene({ sign, moonPhase, headline, energy }: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: OX_EASE }}
         >
+          <OrbiaMark size={16} className="ox-hero__mark" />
           ORBIA
         </motion.p>
 

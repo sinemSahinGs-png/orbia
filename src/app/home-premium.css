@@ -429,11 +429,21 @@ body:has(.memoora-home-premium) {
 }
 
 .home-nav__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.34em;
   text-decoration: none;
   color: var(--hp-ivory);
+}
+
+.home-nav__mark {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 .home-nav__links {
@@ -2562,11 +2572,21 @@ body:has(.memoora-home-premium) {
 }
 
 .home-footer__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin: 0 0 10px;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.34em;
   color: var(--hp-glow);
+}
+
+.home-footer__mark {
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .home-footer__tagline {

@@ -1,10 +1,23 @@
 {
-  "name": "Memory Card",
-  "short_name": "Memory Card",
-  "description": "TAP. PLAY. REMEMBER.",
+  "name": "ORBIA",
+  "short_name": "ORBIA",
+  "description": "Burcuna özel NFC anahtarlık. Günlük gökyüzü, Ay ritmi ve 12 burç mührü.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0A0A0A",
-  "theme_color": "#0A0A0A",
-  "lang": "tr"
+  "background_color": "#0A0712",
+  "theme_color": "#0A0712",
+  "lang": "tr",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-icon",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
 }

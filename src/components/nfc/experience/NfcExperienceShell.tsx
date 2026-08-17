@@ -19,6 +19,7 @@ import { DailyShareCard } from "@/components/nfc/experience/DailyShareCard";
 import { MinimalExperienceFooter } from "@/components/nfc/experience/MinimalExperienceFooter";
 import { OrbitalProgress } from "@/components/nfc/experience/OrbitalProgress";
 import { ExperienceStageMarks } from "@/components/nfc/experience/ExperienceStageMarks";
+import { OrbiaMark } from "@/components/brand/OrbiaMark";
 import { useNfcIntroState } from "@/hooks/use-nfc-intro-state";
 import { usePendingPairCompletion } from "@/hooks/use-pending-pair-completion";
 import { getZodiacCollectionItem } from "@/content/zodiac";
@@ -89,7 +90,8 @@ export function NfcExperienceShell({ code, sign, reading, astronomy }: Props) {
 
         <div className="ox__stage">
           <header className={`ox-nav${navSolid ? " is-solid" : ""}`}>
-            <Link href="/" className="ox-nav__brand">
+            <Link href="/" className="ox-nav__brand" aria-label="ORBIA ana sayfa">
+              <OrbiaMark size={18} className="ox-nav__mark" />
               ORBIA
             </Link>
             <Link href={`/urunler/${sign.slug}`} className="ox-nav__btn">

@@ -30,6 +30,7 @@ export const metadata: Metadata = {
   },
   description:
     "Burcuna özel ORBIA anahtarlığını dokundur; günlük enerjini, Ay’ın ritmini ve iki burcun ortak yorumunu keşfet.",
+  manifest: "/manifest.webmanifest",
   openGraph: {
     title: "ORBIA | Burcuna Özel NFC Anahtarlık",
     description:

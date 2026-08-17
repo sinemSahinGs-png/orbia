@@ -5,7 +5,7 @@ export const site = {
   slogan: "Gökyüzünü yanında taşı.",
   tagline: "Dokundur. Hisset. Keşfet.",
   city: "Türkiye",
-  domain: "https://example-domain.com",
+  domain: "https://orbia.com.tr",
   phoneDisplay: "[Telefon eklenecek]",
   email: "[E-posta eklenecek]",
   address: "Türkiye",

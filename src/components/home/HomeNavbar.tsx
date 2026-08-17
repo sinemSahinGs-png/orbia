@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { site } from "@/content/site";
+import { OrbiaMark } from "@/components/brand/OrbiaMark";
 
 const NAV_LINKS = [
   { href: "/urunler", label: "Ürünler" },
@@ -58,9 +59,11 @@ export function HomeNavbar({ demoHref = "/siparis" }: HomeNavbarProps) {
           <Link
             href="/"
             className="home-nav__logo"
+            aria-label="ORBIA ana sayfa"
             onClick={() => setMenuOpen(false)}
           >
-            {site.brand}
+            <OrbiaMark size={20} className="home-nav__mark" />
+            <span>{site.brand}</span>
           </Link>
 
           <nav className="home-nav__links" aria-label="Ana menü">
